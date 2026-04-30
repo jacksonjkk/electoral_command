@@ -112,14 +112,10 @@ export const PublicBallotEntry: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
         <EmptyState
-        icon="🌌"
-        title="Election Not Found"
-        message="This election does not exist or has been closed."
-        action={{
-          label: "Return Home",
-          onClick: () => navigate('/')
-        }}
-      />
+          icon="🌌"
+          title="Election Not Found"
+          message="This election does not exist or has been closed."
+        />
       </div>
     );
   }

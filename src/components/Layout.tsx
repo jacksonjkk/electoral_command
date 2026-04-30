@@ -1,6 +1,7 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { LogOut, Activity, Home } from 'lucide-react';
+import clsx from 'clsx';
 
 export function Layout() {
   const navigate = useNavigate();
@@ -28,8 +29,11 @@ export function Layout() {
           <div className="glass-card !p-2 md:!p-4 !rounded-[24px] md:!rounded-[32px] flex items-center justify-between border-white/40 shadow-2xl">
             <div className="flex items-center gap-4 md:gap-10">
               <div
-                className="flex items-center gap-2 md:gap-3 cursor-pointer group"
-                onClick={() => navigate('/')}
+                className={clsx(
+                  "flex items-center gap-2 md:gap-3 group",
+                  !isPublicBallot && "cursor-pointer"
+                )}
+                onClick={() => !isPublicBallot && navigate('/')}
               >
                 <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg overflow-hidden border border-gray-100">
                   <img src="/logo.png" alt="Electoral Command Logo" className="w-full h-full object-cover" />

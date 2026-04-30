@@ -159,9 +159,6 @@ export const PublicBallot: React.FC = () => {
             </p>
           </div>
 
-          <Button variant="secondary" fullWidth size="lg" className="!rounded-2xl" onClick={() => navigate('/')}>
-            Return Home
-          </Button>
         </Card>
       </div>
     );
@@ -183,9 +180,6 @@ export const PublicBallot: React.FC = () => {
           <p className="text-gray-500 font-medium mb-10 leading-relaxed">
             Voting for this election has concluded.
           </p>
-          <Button variant="secondary" fullWidth size="lg" className="!rounded-2xl" onClick={() => navigate('/')}>
-            Return Home
-          </Button>
         </Card>
       </div>
     );

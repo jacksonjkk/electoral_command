@@ -34,7 +34,7 @@ export const PublishElection: React.FC = () => {
   );
 
 
-  const ballotLink = `${window.location.origin}/ballot/${electionId}`;
+  const ballotLink = `${window.location.origin}/public-ballot/${electionId}`;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(ballotLink);

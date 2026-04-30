@@ -73,13 +73,15 @@ export function ElectionResults() {
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-24">
       <div className="flex items-center justify-between">
-        <button
-          onClick={() => navigate(isPublicView ? '/' : '/ec')}
-          className="flex items-center gap-2 text-gray-500 hover:text-primary-600 transition-all font-black text-[10px] uppercase tracking-[0.2em] group"
-        >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          {isPublicView ? 'Back to Home' : 'Back to Dashboard'}
-        </button>
+        {!isPublicView && (
+          <button
+            onClick={() => navigate('/ec')}
+            className="flex items-center gap-2 text-gray-500 hover:text-primary-600 transition-all font-black text-[10px] uppercase tracking-[0.2em] group"
+          >
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            Back to Dashboard
+          </button>
+        )}
         <div className="flex items-center gap-2 px-4 py-1.5 bg-red-500/10 text-red-600 rounded-full border border-red-500/20 shadow-neon-danger animate-glow">
           <Activity className="w-4 h-4" />
           <span className="text-[10px] font-black uppercase tracking-widest">Live Results</span>

@@ -236,10 +236,10 @@ export const Alert = ({
       )}
     >
       <div className="flex items-center gap-4">
-        <div className={clsx('w-1.5 h-8 rounded-full', 
-          variant === 'success' ? 'bg-success-500' : 
-          variant === 'error' ? 'bg-danger-500' :
-          variant === 'warning' ? 'bg-yellow-500' : 'bg-primary-500'
+        <div className={clsx('w-1.5 h-8 rounded-full',
+          variant === 'success' ? 'bg-success-500' :
+            variant === 'error' ? 'bg-danger-500' :
+              variant === 'warning' ? 'bg-yellow-500' : 'bg-primary-500'
         )} />
         <div>
           {title && <h4 className="text-xs font-black uppercase tracking-widest mb-0.5">{title}</h4>}
@@ -264,14 +264,14 @@ export const Loading = ({ message = 'Syncing encrypted data...' }: { message?: s
       {/* Background Glows */}
       <div className="absolute inset-0 rounded-full blur-3xl bg-primary-500/20 animate-pulse scale-150" />
       <div className="absolute inset-0 rounded-full blur-2xl bg-accent-cyan/10 animate-glow" />
-      
+
       {/* Custom Loader Image */}
       <div className="relative w-24 h-24 md:w-32 md:h-32 p-4 bg-white/40 backdrop-blur-xl rounded-[40px] border border-white/60 shadow-2xl flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-tr from-primary-500/10 to-transparent" />
-        <img 
-          src="/loader.png" 
-          alt="Loading..." 
-          className="w-full h-full object-contain relative z-10 animate-spin-slow" 
+        <img
+          src="/loader.png"
+          alt="Loading..."
+          className="w-full h-full object-contain relative z-10 animate-spin-slow"
         />
       </div>
     </div>

@@ -4,12 +4,12 @@ import { supabase } from '@/services/supabase';
  * Resolves a candidate image URL from either a full URL or a storage path.
  * Handles various prefixes and ensures the returned URL is valid.
  */
-export const resolveCandidateImageUrl = (imageUrl: string | null | undefined): string | null => {
-  if (!imageUrl) return null;
+export const resolveCandidateImageUrl = (imageUrl: string | null | undefined): string => {
+  if (!imageUrl) return '';
 
   // Remove potential surrounding quotes and trim whitespace
   let trimmed = imageUrl.trim().replace(/^['"]|['"]$/g, '');
-  if (!trimmed || trimmed === 'null' || trimmed === 'undefined') return null;
+  if (!trimmed || trimmed === 'null' || trimmed === 'undefined') return '';
 
   // 1. If it's already a full HTTP(S) URL, return it with a cache buster
   if (/^https?:\/\//i.test(trimmed)) {

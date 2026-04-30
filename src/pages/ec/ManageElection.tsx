@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useElectionById, usePositions } from '@/hooks/useData';
 import { electionService } from '@/services/election';
-import { Card, Button, Loading, Alert, Input, Textarea } from '@/components/UI';
+import { Card, Button, Loading, Alert, Input, Textarea, EmptyState } from '@/components/UI';
 import { formatDateTime } from '@/utils/helpers';
 import { ArrowLeft, Plus, Trash2, Edit2, Activity, Users, Check } from 'lucide-react';
 

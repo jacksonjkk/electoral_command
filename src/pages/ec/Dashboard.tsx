@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useElections, useVotingStats } from '@/hooks/useData';
-import { Card, Button, Loading } from '@/components/UI';
+import { Card, Button, Loading, EmptyState } from '@/components/UI';
 import { formatDateTime, isElectionActive } from '@/utils/helpers';
 import { Plus, BarChart3, Clock, Users, CalendarDays } from 'lucide-react';
 

@@ -18,7 +18,7 @@ export const PublishElection: React.FC = () => {
       const { data, error } = await supabase
         .from('elections')
         .select('*')
-        .eq('id', electionId)
+        .eq('id', electionId!)
         .single();
 
       if (error) throw error;
@@ -55,12 +55,11 @@ export const PublishElection: React.FC = () => {
       <div className="max-w-2xl mx-auto">
         <EmptyState
           title="No Positions Yet"
-          description="Add positions and candidates before publishing this election"
-          action={
-            <Button onClick={() => navigate(`/ec/elections/${electionId}`)}>
-              Back to Manager
-            </Button>
-          }
+          message="Add positions and candidates before publishing this election"
+          action={{
+            label: 'Back to Manager',
+            onClick: () => navigate(`/ec/elections/${electionId}`),
+          }}
         />
       </div>
     );

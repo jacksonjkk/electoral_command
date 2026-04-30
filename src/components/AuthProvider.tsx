@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { AuthContext, useAuthState } from '@/hooks/useAuth';
 
 interface AuthProviderProps {

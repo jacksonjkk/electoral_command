@@ -1,8 +1,6 @@
-import React from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { Button } from '@/components/UI';
-import { LogOut, BarChart3, ShieldCheck, Terminal, Fingerprint, Activity, Home, History } from 'lucide-react';
+import { LogOut, Activity, Home } from 'lucide-react';
 
 export function Layout() {
   const navigate = useNavigate();

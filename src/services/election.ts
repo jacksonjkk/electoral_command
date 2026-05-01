@@ -429,12 +429,13 @@ export const electionService = {
     };
   },
 
-  getRecentVoters: async (electionId: string, limit = 10): Promise<RecentVote[]> => {
+  getRecentVoters: async (electionId: string, limit = 50): Promise<RecentVote[]> => {
     const { data, error } = await supabase
       .from('votes')
       .select(`
         id,
         created_at,
+        voter_id,
         voter_profiles!inner(
           email,
           voter_id
@@ -445,8 +446,20 @@ export const electionService = {
       .limit(limit);
 
     if (error) throw error;
-    return data as unknown as RecentVote[];
+
+    // Deduplicate by voter_id — keep only the first (most recent) entry per voter
+    const seen = new Set<string>();
+    const unique = (data as any[]).filter((vote) => {
+      const vid = vote.voter_id;
+      if (seen.has(vid)) return false;
+      seen.add(vid);
+      return true;
+    });
+
+    // Return only the latest 10 unique voters
+    return unique.slice(0, 10) as unknown as RecentVote[];
   },
+
 
   getAllVotersForExport: async (electionId: string): Promise<RecentVote[]> => {
     const { data, error } = await supabase

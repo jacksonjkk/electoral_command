@@ -1,3 +1,4 @@
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useElectionResults, useVotingStats, useRecentVoters, useElectionById } from '@/hooks/useData';
 import { Card, Loading, EmptyState, Button } from '@/components/UI';
@@ -87,7 +88,6 @@ export function ElectionResults() {
 
   const now = new Date();
   const isEnded = election ? now >= new Date(election.end_time) : false;
-  const isPublicView = location.pathname.startsWith('/public-results');
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-24">

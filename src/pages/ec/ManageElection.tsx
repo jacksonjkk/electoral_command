@@ -3,6 +3,7 @@ import { useQueryClient } from 'react-query';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useElectionById, usePositions } from '@/hooks/useData';
+import { useIsEcAdmin } from '@/hooks/useIsEcAdmin';
 import { electionService } from '@/services/election';
 import { Card, Button, Loading, Alert, Input, Textarea, EmptyState } from '@/components/UI';
 import { formatDateTime, getElectionStatus, formatForInput } from '@/utils/helpers';
@@ -15,8 +16,10 @@ export function ManageElection() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const isEcAdmin = useIsEcAdmin();
 
   const { data: election, isLoading: electionLoading } = useElectionById(electionId);
+
   const { data: positions, isLoading: positionsLoading } = usePositions(electionId);
 
   const [newPosition, setNewPosition] = useState('');
@@ -233,6 +236,30 @@ export function ManageElection() {
                 <Trash2 className="w-4 h-4" />
               </Button>
             </div>
+
+            {/* Publish/Unpublish Results Button — EC Admins only, shown when election is closed */}
+            {isEcAdmin && getElectionStatus(election) === 'closed' && (
+              <Button
+                variant={election.results_published ? 'danger' : 'success'}
+                className="!rounded-2xl"
+                onClick={async () => {
+                  try {
+                    await electionService.toggleResultsPublished(
+                      electionId!,
+                      !election.results_published,
+                      user!.id
+                    );
+                    await queryClient.invalidateQueries(['election', electionId]);
+                  } catch (err) {
+                    console.error('Toggle publish error', err);
+                  }
+                }}
+              >
+                {election.results_published ? '🔒 Unpublish Results' : '🌐 Publish Results'}
+              </Button>
+            )}
+
+
           </div>
         </div>
       </Card>

@@ -43,11 +43,15 @@ export function CreateElection() {
     setLoading(true);
 
     try {
+      // Convert datetime-local string (local time) to UTC ISO string for Supabase
+      const startISO = new Date(startTime).toISOString();
+      const endISO = new Date(endTime).toISOString();
+
       const newElection = await electionService.createElection(
         title,
         description,
-        startTime,
-        endTime,
+        startISO,
+        endISO,
         user!.id,
         regNoRule || undefined
       );
@@ -64,7 +68,9 @@ export function CreateElection() {
 
   const getMinDateTime = () => {
     const now = new Date();
-    return now.toISOString().slice(0, 16);
+    // Format in local time for the min attribute of datetime-local input
+    const offset = now.getTimezoneOffset() * 60000;
+    return new Date(now.getTime() - offset).toISOString().slice(0, 16);
   };
 
   return (

@@ -97,6 +97,26 @@ export const electionService = {
     return data as Election;
   },
 
+  toggleResultsPublished: async (
+    electionId: string,
+    isPublished: boolean,
+    userId: string
+  ): Promise<Election> => {
+    const { data, error } = await supabase
+      .from('elections')
+      .update({ results_published: isPublished })
+      .eq('id', electionId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    await logAction(userId, 'TOGGLE_RESULTS_PUBLISHED', {
+      election_id: electionId,
+      is_published: isPublished,
+    });
+    return data as Election;
+  },
+
   updateElection: async (
     electionId: string,
     updates: {

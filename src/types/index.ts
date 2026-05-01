@@ -27,6 +27,7 @@ export interface Election {
   created_at: string;
   updated_at: string;
   reg_no_rule?: string;
+  results_published?: boolean;
 }
 
 export interface Position {

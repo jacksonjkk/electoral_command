@@ -90,14 +90,21 @@ export const PublicBallotEntry: React.FC = () => {
         }
       }
 
-      // TEMPORARY BYPASS: Skip Magic Link while setting up SMTP
-      /*
+      // Send Magic Link via SMTP
+      if (!electionId) {
+        throw new Error('Election ID is missing. Cannot send ballot access link.');
+      }
+
+      const redirectTo = `${window.location.origin}/public-ballot/${electionId}`;
+      console.log('[Magic Link] Redirect URL:', redirectTo);
+
       const { error: authError } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: `${window.location.origin}/public-ballot/${electionId}`,
+          emailRedirectTo: redirectTo,
         },
       });
+
 
       if (authError) {
         throw new Error('Failed to send secure link: ' + authError.message);
@@ -105,17 +112,6 @@ export const PublicBallotEntry: React.FC = () => {
 
       setSuccessMessage('Check your university email! We just sent you a secure magic link to access the ballot.');
       setLoading(false);
-      */
-
-      // Directly log them in (Temporary)
-      if (!voterData?.voter_id) {
-        throw new Error('Could not initialize voter profile.');
-      }
-      
-      sessionStorage.setItem(`voter_session_${electionId}`, voterData.voter_id);
-      navigate(`/public-ballot/${electionId}`, {
-        state: { email },
-      });
       
     } catch (err) {
       const error = err as Error;

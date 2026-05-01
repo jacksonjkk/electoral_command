@@ -20,6 +20,9 @@ export function ElectionResults() {
   const { data: election } = useElectionById(electionId);
 
   const isPublicView = location.pathname.startsWith('/public-results');
+  // Determine if results are published for public view
+  const resultsPublished = election?.results_published;
+
 
   const handleExportVoters = async () => {
     try {
@@ -73,6 +76,18 @@ export function ElectionResults() {
             label: "Back to Dashboard",
             onClick: () => navigate('/ec')
           }}
+        />
+      </div>
+    );
+  }
+
+  if (isPublicView && !resultsPublished) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center p-6">
+        <EmptyState
+          icon="🔒"
+          title="Results Unpublished"
+          message="The election results have not been released yet. Please check back later."
         />
       </div>
     );

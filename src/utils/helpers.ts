@@ -37,7 +37,10 @@ export const formatForInput = (date: string | Date | null | undefined): string =
   if (!date) return '';
   const d = typeof date === 'string' ? new Date(date) : date;
   if (isNaN(d.getTime())) return '';
-  return format(d, "yyyy-MM-dd'T'HH:mm");
+  // Adjust from UTC to local time for datetime-local input
+  const offset = d.getTimezoneOffset() * 60000;
+  const localDate = new Date(d.getTime() - offset);
+  return localDate.toISOString().slice(0, 16);
 };
 
 /**

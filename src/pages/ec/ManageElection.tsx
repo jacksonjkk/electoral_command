@@ -116,10 +116,20 @@ export function ManageElection() {
     return <Loading message="Loading election..." />;
   }
 
-  if (!election) {
+  if (!election || (user && election.created_by !== user.id)) {
     return (
-      <div className="bg-danger-50 text-danger-800 border border-danger-200 rounded-lg p-4">
-        Election not found.
+      <div className="min-h-[70vh] flex items-center justify-center p-6">
+        <EmptyState
+          icon="🛡️"
+          title={!election ? "Election Not Found" : "Access Denied"}
+          message={!election 
+            ? "The election you are looking for does not exist." 
+            : "You do not have permission to manage this election profile."}
+          action={{
+            label: "Back to Dashboard",
+            onClick: () => navigate('/ec')
+          }}
+        />
       </div>
     );
   }

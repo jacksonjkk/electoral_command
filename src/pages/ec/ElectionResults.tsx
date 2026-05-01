@@ -1,7 +1,6 @@
-import React from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 import { useElectionResults, useVotingStats, useRecentVoters, useElectionById } from '@/hooks/useData';
-import { Card, Loading } from '@/components/UI';
+import { Card, Loading, EmptyState, Button } from '@/components/UI';
 import { formatDateTime } from '@/utils/helpers';
 import { ArrowLeft, TrendingUp, Users, Activity, Download } from 'lucide-react';
 import { electionService } from '@/services/election';
@@ -11,12 +10,15 @@ import clsx from 'clsx';
 export function ElectionResults() {
   const { electionId } = useParams<{ electionId: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const location = useLocation();
 
   const { data: results, isLoading: resultsLoading } = useElectionResults(electionId);
   const { data: stats } = useVotingStats(electionId);
   const { data: recentVoters } = useRecentVoters(electionId);
   const { data: election } = useElectionById(electionId);
+
+  const isPublicView = location.pathname.startsWith('/public-results');
 
   const handleExportVoters = async () => {
     try {
@@ -48,6 +50,7 @@ export function ElectionResults() {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      document.body.removeChild(link);
     } catch (err) {
       console.error('Export failed:', err);
       alert('Failed to export voter list. Please try again.');
@@ -56,6 +59,22 @@ export function ElectionResults() {
 
   if (resultsLoading) {
     return <Loading message="Loading results..." />;
+  }
+
+  if (!isPublicView && election && user && election.created_by !== user.id) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center p-6">
+        <EmptyState
+          icon="🛡️"
+          title="Access Denied"
+          message="You do not have permission to access the audit logs for this election."
+          action={{
+            label: "Back to Dashboard",
+            onClick: () => navigate('/ec')
+          }}
+        />
+      </div>
+    );
   }
 
   if (!results) {

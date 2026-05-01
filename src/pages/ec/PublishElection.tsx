@@ -6,9 +6,12 @@ import { ballotService } from '@/services/ballot';
 import { Button, Card, Alert, Loading, EmptyState, Input } from '@/components/UI';
 import { Copy, Eye, Check, User } from 'lucide-react';
 
+import { useAuth } from '@/hooks/useAuth';
+
 export const PublishElection: React.FC = () => {
   const { electionId } = useParams<{ electionId: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [copied, setCopied] = useState(false);
 
   // Fetch election details
@@ -46,6 +49,22 @@ export const PublishElection: React.FC = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Loading />
+      </div>
+    );
+  }
+
+  if (election && user && election.created_by !== user.id) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center p-6 text-center">
+        <EmptyState
+          icon="🛡️"
+          title="Access Denied"
+          message="You do not have permission to manage this election profile."
+          action={{
+            label: "Back to Dashboard",
+            onClick: () => navigate('/ec')
+          }}
+        />
       </div>
     );
   }

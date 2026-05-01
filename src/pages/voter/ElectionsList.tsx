@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useAssignedElections } from '@/hooks/useData';
 import { Card, Loading, EmptyState, Button } from '@/components/UI';
-import { formatDateTime, isElectionActive, getTimeRemaining } from '@/utils/helpers';
+import { formatDateTime, isElectionActive, getTimeRemaining, getElectionStatus } from '@/utils/helpers';
 import { CalendarDays, Clock, CheckCircle2, ShieldCheck, ArrowRight } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -44,14 +44,14 @@ export function ElectionsList() {
     );
   }
 
-  const activeElections = elections.filter((e) =>
-    isElectionActive(e.start_time, e.end_time)
+  const activeElections = elections.filter(
+    (e) => getElectionStatus(e) === 'active'
   );
   const upcomingElections = elections.filter(
-    (e) => new Date(e.start_time) > new Date()
+    (e) => getElectionStatus(e) === 'scheduled'
   );
   const pastElections = elections.filter(
-    (e) => new Date(e.end_time) < new Date()
+    (e) => getElectionStatus(e) === 'closed'
   );
 
   return (

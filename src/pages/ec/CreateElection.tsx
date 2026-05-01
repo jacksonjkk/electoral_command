@@ -5,7 +5,7 @@ import { electionService } from '@/services/election';
 import { Card, Button, Input, Textarea, Alert } from '@/components/UI';
 import { ArrowLeft, Check } from 'lucide-react';
 
-const COMMON_COURSES = ['KEP', 'BSCED', 'KSE', 'HEC', 'BIT', 'BCS', 'BBA', 'LLB'];
+const COMMON_COURSES = ['KEP', 'BSCED', 'KSE', 'HEC', 'BIT', 'KCS', 'BBA', 'LLB'];
 
 export function CreateElection() {
   const navigate = useNavigate();

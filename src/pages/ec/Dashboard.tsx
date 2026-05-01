@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useElections, useVotingStats } from '@/hooks/useData';
 import { Card, Button, Loading, EmptyState } from '@/components/UI';
-import { formatDateTime, isElectionActive } from '@/utils/helpers';
+import { formatDateTime, isElectionActive, getElectionStatus } from '@/utils/helpers';
 import { Plus, BarChart3, Clock, Users, CalendarDays } from 'lucide-react';
 
 export function ECDashboard() {
@@ -22,11 +22,11 @@ export function ECDashboard() {
   }
 
   const activeCount =
-    elections?.filter((e) => isElectionActive(e.start_time, e.end_time)).length || 0;
+    elections?.filter((e) => getElectionStatus(e) === 'active').length || 0;
   const scheduledCount =
-    elections?.filter((e) => e.status === 'scheduled').length || 0;
+    elections?.filter((e) => getElectionStatus(e) === 'scheduled').length || 0;
   const closedCount =
-    elections?.filter((e) => e.status === 'closed').length || 0;
+    elections?.filter((e) => getElectionStatus(e) === 'closed').length || 0;
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-20">
@@ -78,74 +78,77 @@ export function ECDashboard() {
           <div className="flex bg-white/50 p-1 rounded-2xl border border-white/40 shadow-sm backdrop-blur-sm">
             <button
               onClick={() => setFilter('active')}
-              className={`px-8 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
-                filter === 'active' ? 'bg-primary-600 text-white shadow-neon-primary' : 'text-gray-400 hover:text-gray-900'
-              }`}
+              className={`px-8 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${filter === 'active' ? 'bg-primary-600 text-white shadow-neon-primary' : 'text-gray-400 hover:text-gray-900'
+                }`}
             >
               Active & Scheduled
             </button>
             <button
               onClick={() => setFilter('past')}
-              className={`px-8 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
-                filter === 'past' ? 'bg-primary-600 text-white shadow-neon-primary' : 'text-gray-400 hover:text-gray-900'
-              }`}
+              className={`px-8 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${filter === 'past' ? 'bg-primary-600 text-white shadow-neon-primary' : 'text-gray-400 hover:text-gray-900'
+                }`}
             >
               Past Results
             </button>
           </div>
           <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total {elections?.length || 0} Elections</span>
         </div>
-        
+
         {elections && elections.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {elections
-              .filter(e => filter === 'active' ? e.status !== 'closed' : e.status === 'closed')
-              .map((election) => (
-              <Card
-                key={election.id}
-                className="group border-2 border-transparent hover:border-primary-500/30 transition-all"
-              >
-                <div className="flex items-start justify-between mb-6">
-                  <div className="space-y-1">
-                    <h3 className="font-black text-xl text-gray-900 group-hover:text-primary-600 transition-colors tracking-tight">
-                      {election.title}
-                    </h3>
-                    <div className="flex items-center gap-3 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                      <Clock className="w-3.5 h-3.5" />
-                      {new Date(election.start_time).toLocaleDateString()} — {new Date(election.end_time).toLocaleDateString()}
+              .filter(e => {
+                const status = getElectionStatus(e);
+                return filter === 'active' ? status !== 'closed' : status === 'closed';
+              })
+              .map((election) => {
+                const status = getElectionStatus(election);
+                return (
+                  <Card
+                    key={election.id}
+                    className="group border-2 border-transparent hover:border-primary-500/30 transition-all"
+                  >
+                    <div className="flex items-start justify-between mb-6">
+                      <div className="space-y-1">
+                        <h3 className="font-black text-xl text-gray-900 group-hover:text-primary-600 transition-colors tracking-tight">
+                          {election.title}
+                        </h3>
+                        <div className="flex items-center gap-3 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                          <Clock className="w-3.5 h-3.5" />
+                          {new Date(election.start_time).toLocaleDateString()} — {new Date(election.end_time).toLocaleDateString()}
+                        </div>
+                      </div>
+                      <span
+                        className={`text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full border-2 ${status === 'active'
+                            ? 'bg-success-500/10 text-success-700 border-success-500/20'
+                            : status === 'scheduled'
+                              ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
+                              : 'bg-gray-100 text-gray-500 border-gray-200'
+                          }`}
+                      >
+                        {status}
+                      </span>
                     </div>
-                  </div>
-                  <span
-                    className={`text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full border-2 ${
-                      election.status === 'active'
-                        ? 'bg-success-500/10 text-success-700 border-success-500/20'
-                        : election.status === 'scheduled'
-                          ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
-                          : 'bg-gray-100 text-gray-500 border-gray-200'
-                    }`}
-                  >
-                    {election.status}
-                  </span>
-                </div>
-                
-                <div className="flex gap-3">
-                  <Button
-                    className="flex-1 !rounded-2xl"
-                    onClick={() => navigate(`/ec/elections/${election.id}`)}
-                  >
-                    Manage
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    className="flex-1 !rounded-2xl border-2 border-gray-100"
-                    onClick={() => navigate(`/ec/elections/${election.id}/results`)}
-                  >
-                    <BarChart3 className="w-4 h-4 mr-2" />
-                    View Results
-                  </Button>
-                </div>
-              </Card>
-            ))}
+
+                    <div className="flex gap-3">
+                      <Button
+                        className="flex-1 !rounded-2xl"
+                        onClick={() => navigate(`/ec/elections/${election.id}`)}
+                      >
+                        Manage
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        className="flex-1 !rounded-2xl border-2 border-gray-100"
+                        onClick={() => navigate(`/ec/elections/${election.id}/results`)}
+                      >
+                        <BarChart3 className="w-4 h-4 mr-2" />
+                        View Results
+                      </Button>
+                    </div>
+                  </Card>
+                );
+              })}
           </div>
         ) : (
           <EmptyState

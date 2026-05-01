@@ -15,6 +15,7 @@ export const PublicBallotEntry: React.FC = () => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     // Check if this device has already voted for this election
@@ -22,6 +23,14 @@ export const PublicBallotEntry: React.FC = () => {
       navigate(`/public-results/${electionId}`, { replace: true });
     }
   }, [electionId, navigate]);
+
+  // Live timer for countdowns and auto-transitions
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Fetch election details with strict typing
   const { data: election, isLoading: electionLoading } = useQuery<Election>(
@@ -70,36 +79,43 @@ export const PublicBallotEntry: React.FC = () => {
         }
       }
 
-      // Get or create voter profile
+      // Check if voter has already voted in this election BEFORE sending the link
       const voterData = await ballotService.getOrCreateVoter(email);
-
-      if (!voterData || !voterData.voter_id) {
-        throw new Error('Connection error. Please try again.');
+      if (voterData?.voter_id) {
+        const hasVoted = await ballotService.hasVotedInElection(voterData.voter_id, electionId);
+        if (hasVoted) {
+          setError('You have already voted in this election.');
+          setLoading(false);
+          return;
+        }
       }
 
-      const voterId = voterData.voter_id;
+      // TEMPORARY BYPASS: Skip Magic Link while setting up SMTP
+      /*
+      const { error: authError } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/public-ballot/${electionId}`,
+        },
+      });
 
-      // Check if voter has already voted in this election
-      const hasVoted = await ballotService.hasVotedInElection(
-        voterId,
-        electionId
-      );
-
-      if (hasVoted) {
-        setError('You have already voted in this election.');
-        setLoading(false);
-        return;
+      if (authError) {
+        throw new Error('Failed to send secure link: ' + authError.message);
       }
 
-      // All checks passed, store session and redirect to ballot
-      sessionStorage.setItem(`voter_session_${electionId}`, voterId);
-      
+      setSuccessMessage('Check your university email! We just sent you a secure magic link to access the ballot.');
+      setLoading(false);
+      */
+
+      // Directly log them in (Temporary)
+      sessionStorage.setItem(`voter_session_${electionId}`, voterData.voter_id);
       navigate(`/public-ballot/${electionId}`, {
         state: { email },
       });
+      
     } catch (err) {
       const error = err as Error;
-      setError(error.message || 'Error checking your email.');
+      setError(error.message || 'Error sending magic link.');
       setLoading(false);
     }
   };
@@ -120,7 +136,7 @@ export const PublicBallotEntry: React.FC = () => {
     );
   }
 
-  const now = new Date();
+  const now = currentTime;
   const startTime = new Date(election.start_time);
   const endTime = new Date(election.end_time);
   const isStarted = now >= startTime;
@@ -143,7 +159,7 @@ export const PublicBallotEntry: React.FC = () => {
             <Fingerprint className="w-6 h-6 md:w-8 md:h-8 text-primary-600" />
           </div>
           <div>
-            <p className="text-[10px] font-black text-primary-600 uppercase tracking-[0.4em] mb-1">Login</p>
+            <p className="text-[10px] font-black text-primary-600 uppercase tracking-[0.4em] mb-1">Voter Access</p>
             <h1 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight leading-tight">
               Start Voting
             </h1>
@@ -189,6 +205,7 @@ export const PublicBallotEntry: React.FC = () => {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && <Alert variant="error" title="Error" message={error} className="rounded-[24px]" onClose={() => setError('')} />}
+            {successMessage && <Alert variant="success" title="Email Sent!" message={successMessage} className="rounded-[24px]" onClose={() => setSuccessMessage('')} />}
 
             {isVotingOpen ? (
               <div className="space-y-6">

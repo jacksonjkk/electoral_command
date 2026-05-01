@@ -4,7 +4,7 @@ import { useQuery, useMutation } from 'react-query';
 import { supabase } from '@/services/supabase';
 import { ballotService } from '@/services/ballot';
 import { Button, Card, Alert, Loading, EmptyState } from '@/components/UI';
-import { formatDateTime, getTimeRemaining } from '@/utils/helpers';
+import { formatDateTime, getTimeRemaining, getInitials } from '@/utils/helpers';
 import { User, ShieldCheck, Lock, Clock, CheckCircle2, ArrowLeft, Mail } from 'lucide-react';
 import { VotePayload } from '@/types';
 import clsx from 'clsx';
@@ -19,20 +19,56 @@ export const PublicBallot: React.FC = () => {
   
   // Retrieve voter ID from secure session storage instead of URL
   const [voterId, setVoterId] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string>(location.state?.email || '');
 
   const [selectedVotes, setSelectedVotes] = useState<Record<string, string>>({});
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [error, setError] = useState('');
+  
+  // Live timer for countdowns and auto-transitions
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
-    const sessionVoterId = sessionStorage.getItem(`voter_session_${electionId}`);
-    
-    if (!sessionVoterId) {
-      // If no valid session, redirect back to entry
-      navigate(`/ballot/${electionId}`, { replace: true });
-    } else {
-      setVoterId(sessionVoterId);
-    }
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const initializeVoter = async () => {
+      // Check if arriving from a Magic Link (Supabase Auth Session)
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session?.user?.email) {
+        const email = session.user.email;
+        if (isMounted) setUserEmail(email);
+        
+        try {
+          const voterData = await ballotService.getOrCreateVoter(email);
+          if (voterData?.voter_id) {
+            sessionStorage.setItem(`voter_session_${electionId}`, voterData.voter_id);
+            if (isMounted) setVoterId(voterData.voter_id);
+          } else {
+            if (isMounted) navigate(`/ballot/${electionId}`, { replace: true });
+          }
+        } catch (e) {
+          if (isMounted) navigate(`/ballot/${electionId}`, { replace: true });
+        }
+      } else {
+        // Fallback for page reloads (if session was already created)
+        const sessionVoterId = sessionStorage.getItem(`voter_session_${electionId}`);
+        if (!sessionVoterId) {
+          if (isMounted) navigate(`/ballot/${electionId}`, { replace: true });
+        } else {
+          if (isMounted) setVoterId(sessionVoterId);
+        }
+      }
+    };
+
+    initializeVoter();
+
+    return () => { isMounted = false; };
   }, [electionId, navigate]);
 
   // Fetch ballot
@@ -83,8 +119,12 @@ export const PublicBallot: React.FC = () => {
       onSuccess: () => {
         // Clear session after successful vote
         sessionStorage.removeItem(`voter_session_${electionId}`);
+        
+        // Also sign out from Supabase to clear the magic link session so they can't vote again
+        supabase.auth.signOut();
+        
         navigate(`/public-ballot/${electionId}/success`, {
-          state: { email },
+          state: { email: userEmail },
         });
       },
       onError: (err: unknown) => {
@@ -111,6 +151,13 @@ export const PublicBallot: React.FC = () => {
     ? ballot.length > 0 && ballot.every((item) => selectedVotes[item.position.id])
     : false;
 
+  const now = currentTime;
+  const startTime = new Date(election?.start_time || '');
+  const endTime = new Date(election?.end_time || '');
+  const isStarted = now >= startTime;
+  const isEnded = now >= endTime;
+  const isVotingOpen = (election?.status === 'active' || (election?.status === 'scheduled' && isStarted)) && !isEnded;
+
   if (ballotLoading || !voterId) {
     return <Loading message="Authorizing secure session..." />;
   }
@@ -131,34 +178,25 @@ export const PublicBallot: React.FC = () => {
     );
   }
 
-  const now = new Date();
-  const startTime = new Date(election?.start_time || '');
-  const endTime = new Date(election?.end_time || '');
-  const isStarted = now >= startTime;
-  const isEnded = now >= endTime;
-  const isVotingOpen = (election?.status === 'active' || (election?.status === 'scheduled' && isStarted)) && !isEnded;
-
-  // If the election hasn't started yet and we aren't overriding for auto-start
   if (!isVotingOpen && !isEnded) {
     return (
-      <div className="min-h-screen flex items-center justify-center py-20 px-4">
-        <Card className="max-w-xl w-full text-center !p-12 relative overflow-hidden">
+      <div className="min-h-[60vh] flex items-center justify-center py-8 md:py-12 px-4">
+        <Card className="max-w-xl w-full text-center !p-6 md:!p-12 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-primary-500 animate-pulse" />
-          <div className="w-24 h-24 bg-primary-500/10 rounded-3xl flex items-center justify-center mx-auto mb-8 border border-primary-500/20">
-            <Clock className="w-12 h-12 text-primary-600" />
+          <div className="w-16 h-16 md:w-24 md:h-24 bg-primary-500/10 rounded-2xl md:rounded-3xl flex items-center justify-center mx-auto mb-6 md:mb-8 border border-primary-500/20">
+            <Clock className="w-8 h-8 md:w-12 md:h-12 text-primary-600" />
           </div>
-          <h1 className="text-4xl font-black text-gray-900 mb-4 tracking-tight">{election?.title}</h1>
-          <span className="inline-block px-4 py-1.5 bg-primary-600 text-white text-[10px] font-black uppercase tracking-[0.3em] rounded-full mb-10">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 mb-4 tracking-tight">{election?.title}</h1>
+          <span className="inline-block px-3 py-1.5 md:px-4 md:py-1.5 bg-primary-600 text-white text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] rounded-full mb-8 md:mb-10">
             Awaiting Launch
           </span>
 
-          <div className="bg-gray-50 rounded-3xl p-10 border border-gray-100 mb-10">
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-4">Starts In</p>
-            <p className="text-5xl font-black text-primary-600 tabular-nums tracking-tighter">
+          <div className="bg-gray-50 rounded-2xl md:rounded-3xl p-6 md:p-10 border border-gray-100 mb-6 md:mb-10">
+            <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] md:tracking-[0.3em] mb-2 md:mb-4">Starts In</p>
+            <p className="text-2xl sm:text-4xl md:text-5xl font-black text-primary-600 tabular-nums tracking-tighter">
               {getTimeRemaining(election?.start_time || '')}
             </p>
           </div>
-
         </Card>
       </div>
     );
@@ -167,17 +205,17 @@ export const PublicBallot: React.FC = () => {
   // If the election has ended
   if (isEnded || election?.status === 'closed') {
     return (
-      <div className="min-h-screen flex items-center justify-center py-20 px-4">
-        <Card className="max-w-xl w-full text-center !p-12 relative overflow-hidden">
+      <div className="min-h-[60vh] flex items-center justify-center py-8 md:py-12 px-4">
+        <Card className="max-w-xl w-full text-center !p-6 md:!p-12 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-gray-400" />
-          <div className="w-24 h-24 bg-gray-100 rounded-3xl flex items-center justify-center mx-auto mb-8 border border-gray-200">
-            <Lock className="w-12 h-12 text-gray-400" />
+          <div className="w-16 h-16 md:w-24 md:h-24 bg-gray-100 rounded-2xl md:rounded-3xl flex items-center justify-center mx-auto mb-6 md:mb-8 border border-gray-200">
+            <Lock className="w-8 h-8 md:w-12 md:h-12 text-gray-400" />
           </div>
-          <h1 className="text-4xl font-black text-gray-900 mb-4 tracking-tight">{election?.title}</h1>
-          <span className="inline-block px-4 py-1.5 bg-gray-100 text-gray-500 text-[10px] font-black uppercase tracking-[0.3em] rounded-full mb-10">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 mb-4 tracking-tight">{election?.title}</h1>
+          <span className="inline-block px-3 py-1.5 md:px-4 md:py-1.5 bg-gray-100 text-gray-500 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] rounded-full mb-8 md:mb-10">
             Election Closed
           </span>
-          <p className="text-gray-500 font-medium mb-10 leading-relaxed">
+          <p className="text-sm md:text-base text-gray-500 font-medium mb-6 md:mb-10 leading-relaxed">
             Voting for this election has concluded.
           </p>
         </Card>
@@ -200,7 +238,7 @@ export const PublicBallot: React.FC = () => {
             <div className="flex flex-wrap items-center gap-4 mt-2">
               <span className="flex items-center gap-2 text-[10px] md:text-xs font-bold text-gray-500 tracking-widest bg-gray-100 px-3 py-1.5 rounded-lg max-w-full whitespace-normal break-all">
                 <Mail className="w-3.5 h-3.5 shrink-0" />
-                Voter: {email.toLowerCase() || 'Verified Student'}
+                Voter: {userEmail.toLowerCase() || 'Verified Student'}
               </span>
             </div>
           </div>
@@ -243,16 +281,29 @@ export const PublicBallot: React.FC = () => {
                         <img
                           src={candidate.image_url}
                           alt={candidate.name}
+                          onError={(e) => {
+                            // If the image fails to load (broken link, permissions), hide it and let the fallback show
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                          }}
                           className={clsx(
                             'w-full h-full object-cover transition-transform duration-700',
                             isSelected ? 'scale-110' : 'group-hover:scale-110'
                           )}
                         />
-                      ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center text-gray-300">
-                          <User className="w-20 h-20" />
-                        </div>
-                      )}
+                      ) : null}
+                      
+                      {/* Fallback avatar (Initials) */}
+                      <div 
+                        className={clsx(
+                          "w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100",
+                          candidate.image_url ? "hidden" : ""
+                        )}
+                      >
+                        <span className="text-6xl font-black text-primary-300 tracking-tighter">
+                          {getInitials(candidate.name)}
+                        </span>
+                      </div>
                       {isSelected && (
                         <div className="absolute inset-0 bg-primary-600/40 backdrop-blur-sm flex items-center justify-center">
                           <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-2xl animate-glow">

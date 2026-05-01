@@ -59,11 +59,6 @@ export function ManagePosition() {
       return;
     }
 
-    if (!selectedFile) {
-      setError('Candidate image is required');
-      return;
-    }
-
     setLoadingCandidate(true);
 
     try {
@@ -76,12 +71,14 @@ export function ManagePosition() {
         user!.id
       );
 
-      // Upload image
-      const imageUrl = await electionService.uploadCandidateImage(
-        candidate.id,
-        selectedFile,
-        user!.id
-      );
+      // Upload image if provided
+      if (selectedFile) {
+        await electionService.uploadCandidateImage(
+          candidate.id,
+          selectedFile,
+          user!.id
+        );
+      }
 
       setCandidateName('');
       setManifesto('');
@@ -227,7 +224,7 @@ export function ManagePosition() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Candidate Image (Required)
+              Candidate Image (Optional)
             </label>
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary-400 transition-colors">
               {selectedFile ? (

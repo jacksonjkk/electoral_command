@@ -17,7 +17,7 @@ export const formatDateTime = (date: string | Date | null | undefined): string =
   if (!date) return 'N/A';
   const d = typeof date === 'string' ? new Date(date) : date;
   if (isNaN(d.getTime())) return 'N/A';
-  return format(d, 'MMM dd, yyyy HH:mm');
+  return format(d, 'MMM dd, yyyy h:mm a');
 };
 
 /**
@@ -27,7 +27,17 @@ export const formatTime = (date: string | Date | null | undefined): string => {
   if (!date) return 'N/A';
   const d = typeof date === 'string' ? new Date(date) : date;
   if (isNaN(d.getTime())) return 'N/A';
-  return format(d, 'HH:mm');
+  return format(d, 'h:mm a');
+};
+
+/**
+ * Format date for datetime-local input
+ */
+export const formatForInput = (date: string | Date | null | undefined): string => {
+  if (!date) return '';
+  const d = typeof date === 'string' ? new Date(date) : date;
+  if (isNaN(d.getTime())) return '';
+  return format(d, "yyyy-MM-dd'T'HH:mm");
 };
 
 /**
@@ -62,6 +72,25 @@ export const isElectionEnded = (endTime: string): boolean => {
 };
 
 /**
+ * Get the derived status of an election based on its times
+ */
+export const getElectionStatus = (election: {
+  status: string;
+  start_time: string;
+  end_time: string;
+}): string => {
+  if (election.status === 'closed') return 'closed';
+
+  const now = new Date();
+  const start = new Date(election.start_time);
+  const end = new Date(election.end_time);
+
+  if (now > end) return 'closed';
+  if (now >= start && now <= end) return 'active';
+  return election.status;
+};
+
+/**
  * Calculate time remaining
  */
 export const getTimeRemaining = (endTime: string): string => {
@@ -76,11 +105,11 @@ export const getTimeRemaining = (endTime: string): string => {
   const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
   if (hours > 0) {
-    return `${hours}h ${minutes}m remaining`;
+    return `${hours}h ${minutes}m ${seconds}s`;
   } else if (minutes > 0) {
-    return `${minutes}m ${seconds}s remaining`;
+    return `${minutes}m ${seconds}s`;
   } else {
-    return `${seconds}s remaining`;
+    return `${seconds}s`;
   }
 };
 

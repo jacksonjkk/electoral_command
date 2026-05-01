@@ -5,10 +5,10 @@ import { useAuth } from '@/hooks/useAuth';
 import { useElectionById, usePositions } from '@/hooks/useData';
 import { electionService } from '@/services/election';
 import { Card, Button, Loading, Alert, Input, Textarea, EmptyState } from '@/components/UI';
-import { formatDateTime } from '@/utils/helpers';
+import { formatDateTime, getElectionStatus, formatForInput } from '@/utils/helpers';
 import { ArrowLeft, Plus, Trash2, Edit2, Activity, Users, Check } from 'lucide-react';
 
-const COMMON_COURSES = ['KEP', 'BSCED', 'KSE', 'HEC', 'BIT', 'BCS', 'BBA', 'LLB'];
+const COMMON_COURSES = ['KEP', 'BSCED', 'KSE', 'HEC', 'BIT', 'KCS', 'BBA', 'LLB'];
 
 export function ManageElection() {
   const { electionId } = useParams<{ electionId: string }>();
@@ -29,8 +29,8 @@ export function ManageElection() {
   const [editingElection, setEditingElection] = useState(false);
   const [editTitle, setEditTitle] = useState(election?.title || '');
   const [editDesc, setEditDesc] = useState(election?.description || '');
-  const [editStartTime, setEditStartTime] = useState(election?.start_time?.slice(0, 16) || '');
-  const [editEndTime, setEditEndTime] = useState(election?.end_time?.slice(0, 16) || '');
+  const [editStartTime, setEditStartTime] = useState(formatForInput(election?.start_time));
+  const [editEndTime, setEditEndTime] = useState(formatForInput(election?.end_time));
   const [editRegNoRule, setEditRegNoRule] = useState(election?.reg_no_rule || '');
   const [savingEdit, setSavingEdit] = useState(false);
 
@@ -67,6 +67,12 @@ export function ManageElection() {
         },
         user!.id
       );
+      
+      // Invalidate caches so the dashboard and other views update immediately
+      await queryClient.invalidateQueries(['election', electionId]);
+      await queryClient.invalidateQueries(['all-elections']);
+      await queryClient.invalidateQueries(['assigned-elections']);
+      
       setSuccess('Election updated successfully');
       setEditingElection(false);
     } catch (err) {
@@ -196,12 +202,14 @@ export function ManageElection() {
               <Activity className="w-4 h-4 mr-2" />
               View Results
             </Button>
-            <Button
-              className="!rounded-2xl !py-4"
-              onClick={() => navigate(`/ec/elections/${electionId}/publish`)}
-            >
-              Publish Election
-            </Button>
+            {getElectionStatus(election) !== 'closed' && (
+              <Button
+                className="!rounded-2xl !py-4"
+                onClick={() => navigate(`/ec/elections/${electionId}/publish`)}
+              >
+                Publish Election
+              </Button>
+            )}
             <div className="grid grid-cols-2 gap-3">
               <Button
                 variant="secondary"
@@ -210,8 +218,8 @@ export function ManageElection() {
                   setEditingElection(true);
                   setEditTitle(election.title);
                   setEditDesc(election.description || '');
-                  setEditStartTime(election.start_time?.slice(0, 16) || '');
-                  setEditEndTime(election.end_time?.slice(0, 16) || '');
+                  setEditStartTime(formatForInput(election.start_time));
+                  setEditEndTime(formatForInput(election.end_time));
                   setEditRegNoRule(election.reg_no_rule || '');
                 }}
               >

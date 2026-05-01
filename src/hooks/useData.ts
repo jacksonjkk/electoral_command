@@ -47,10 +47,10 @@ export function useVoterVotes(voterId: string | undefined, electionId: string | 
   );
 }
 
-export function useElections() {
+export function useElections(userId?: string) {
   return useQuery(
-    ['all-elections'],
-    () => electionService.getElections(),
+    ['all-elections', userId],
+    () => electionService.getElections(userId),
     {
       staleTime: 60000,
     }

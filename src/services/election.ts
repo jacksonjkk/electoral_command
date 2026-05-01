@@ -51,11 +51,16 @@ export const electionService = {
     }
   },
 
-  getElections: async (): Promise<Election[]> => {
-    const { data, error } = await supabase
+  getElections: async (userId?: string): Promise<Election[]> => {
+    let query = supabase
       .from('elections')
-      .select('*')
-      .order('created_at', { ascending: false });
+      .select('*');
+
+    if (userId) {
+      query = query.eq('created_by', userId);
+    }
+
+    const { data, error } = await query.order('created_at', { ascending: false });
 
     if (error) throw error;
     return data as Election[];

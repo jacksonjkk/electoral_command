@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 import { useElections, useVotingStats } from '@/hooks/useData';
 import { Card, Button, Loading, EmptyState } from '@/components/UI';
 import { formatDateTime, isElectionActive } from '@/utils/helpers';
@@ -7,8 +8,9 @@ import { Plus, BarChart3, Clock, Users, CalendarDays } from 'lucide-react';
 
 export function ECDashboard() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data: elections, isLoading } = useElections();
+  const { data: elections, isLoading } = useElections(user?.id);
   const filter = (searchParams.get('tab') as 'active' | 'past') || 'active';
 
   const setFilter = (newFilter: 'active' | 'past') => {

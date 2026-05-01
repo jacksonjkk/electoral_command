@@ -108,6 +108,10 @@ export const PublicBallotEntry: React.FC = () => {
       */
 
       // Directly log them in (Temporary)
+      if (!voterData?.voter_id) {
+        throw new Error('Could not initialize voter profile.');
+      }
+      
       sessionStorage.setItem(`voter_session_${electionId}`, voterData.voter_id);
       navigate(`/public-ballot/${electionId}`, {
         state: { email },

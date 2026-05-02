@@ -316,3 +316,22 @@ export const EmptyState = ({
   </Card>
 );
 
+export const Skeleton = ({ className }: { className?: string }) => (
+  <div className={clsx("animate-pulse bg-gray-200/60 rounded-xl", className)} />
+);
+
+export const ElectionSkeleton = () => (
+  <div className="glass-card p-6 border-2 border-gray-100 rounded-2xl">
+    <div className="flex justify-between items-start mb-4">
+      <Skeleton className="h-6 w-3/4" />
+      <Skeleton className="h-6 w-16 rounded-full" />
+    </div>
+    <Skeleton className="h-4 w-full mb-2" />
+    <Skeleton className="h-4 w-2/3 mb-6" />
+    <div className="flex items-center justify-between">
+      <Skeleton className="h-4 w-24" />
+      <Skeleton className="h-10 w-28 rounded-xl" />
+    </div>
+  </div>
+);
+

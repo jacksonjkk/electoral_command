@@ -2,8 +2,8 @@ import React from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useElections, useVotingStats } from '@/hooks/useData';
-import { Card, Button, Loading, EmptyState } from '@/components/UI';
-import { formatDateTime, isElectionActive, getElectionStatus } from '@/utils/helpers';
+import { Card, Button, EmptyState, Skeleton, ElectionSkeleton } from '@/components/UI';
+import { formatDateTime, getElectionStatus } from '@/utils/helpers';
 import { Plus, BarChart3, Clock, Users, CalendarDays } from 'lucide-react';
 
 export function ECDashboard() {
@@ -17,9 +17,6 @@ export function ECDashboard() {
     setSearchParams({ tab: newFilter });
   };
 
-  if (isLoading) {
-    return <Loading message="Loading elections..." />;
-  }
 
   const activeCount =
     elections?.filter((e) => getElectionStatus(e) === 'active').length || 0;
@@ -49,27 +46,41 @@ export function ECDashboard() {
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[
-          { label: 'Total Elections', value: elections?.length || 0, icon: BarChart3, color: 'primary' },
-          { label: 'Active Now', value: activeCount, icon: Clock, color: 'success', pulse: true },
-          { label: 'Scheduled', value: scheduledCount, icon: CalendarDays, color: 'blue' },
-          { label: 'Closed', value: closedCount, icon: Users, color: 'gray' },
-        ].map((stat, i) => (
-          <Card key={i} className="relative overflow-hidden group">
-            <div className={`absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 bg-${stat.color}-500/10 rounded-full blur-3xl group-hover:bg-${stat.color}-500/20 transition-colors`} />
-            <div className="flex items-center justify-between relative z-10">
-              <div>
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">{stat.label}</p>
-                <p className={`text-4xl font-black text-gray-900`}>
-                  {stat.value}
-                </p>
+        {isLoading ? (
+          Array(4).fill(0).map((_, i) => (
+            <Card key={i} className="relative overflow-hidden">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Skeleton className="h-3 w-20 mb-2" />
+                  <Skeleton className="h-8 w-12" />
+                </div>
+                <Skeleton className="h-12 w-12 rounded-2xl" />
               </div>
-              <div className={`p-3 rounded-2xl bg-${stat.color}-50 text-${stat.color}-600`}>
-                <stat.icon className={`w-6 h-6 ${stat.pulse ? 'animate-glow' : ''}`} />
+            </Card>
+          ))
+        ) : (
+          [
+            { label: 'Total Elections', value: elections?.length || 0, icon: BarChart3, color: 'primary' },
+            { label: 'Active Now', value: activeCount, icon: Clock, color: 'success', pulse: true },
+            { label: 'Scheduled', value: scheduledCount, icon: CalendarDays, color: 'blue' },
+            { label: 'Closed', value: closedCount, icon: Users, color: 'gray' },
+          ].map((stat, i) => (
+            <Card key={i} className="relative overflow-hidden group">
+              <div className={`absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 bg-${stat.color}-500/10 rounded-full blur-3xl group-hover:bg-${stat.color}-500/20 transition-colors`} />
+              <div className="flex items-center justify-between relative z-10">
+                <div>
+                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">{stat.label}</p>
+                  <p className={`text-4xl font-black text-gray-900`}>
+                    {stat.value}
+                  </p>
+                </div>
+                <div className={`p-3 rounded-2xl bg-${stat.color}-50 text-${stat.color}-600`}>
+                  <stat.icon className={`w-6 h-6 ${stat.pulse ? 'animate-glow' : ''}`} />
+                </div>
               </div>
-            </div>
-          </Card>
-        ))}
+            </Card>
+          ))
+        )}
       </div>
 
       {/* Elections List */}
@@ -94,7 +105,13 @@ export function ECDashboard() {
           <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total {elections?.length || 0} Elections</span>
         </div>
 
-        {elections && elections.length > 0 ? (
+        {isLoading ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {Array(4).fill(0).map((_, i) => (
+              <ElectionSkeleton key={i} />
+            ))}
+          </div>
+        ) : elections && elections.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {elections
               .filter(e => {

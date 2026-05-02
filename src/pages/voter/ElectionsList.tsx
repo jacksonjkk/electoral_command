@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useAssignedElections } from '@/hooks/useData';
-import { Card, Loading, EmptyState, Button } from '@/components/UI';
+import { Card, EmptyState, Button, Skeleton, ElectionSkeleton } from '@/components/UI';
 import { formatDateTime, isElectionActive, getTimeRemaining, getElectionStatus } from '@/utils/helpers';
 import { CalendarDays, Clock, CheckCircle2, ShieldCheck, ArrowRight } from 'lucide-react';
 import clsx from 'clsx';
@@ -16,9 +16,6 @@ export function ElectionsList() {
     navigate(`/vote/${electionId}`);
   };
 
-  if (isLoading) {
-    return <Loading message="Checking your elections..." />;
-  }
 
   if (error) {
     return (
@@ -32,7 +29,7 @@ export function ElectionsList() {
     );
   }
 
-  if (!elections || elections.length === 0) {
+  if (!isLoading && (!elections || elections.length === 0)) {
     return (
       <div className="max-w-2xl mx-auto py-20 px-4">
         <EmptyState
@@ -69,8 +66,23 @@ export function ElectionsList() {
         </div>
       </div>
 
+      {/* Loading Skeletons */}
+      {isLoading && (
+        <section className="space-y-6">
+          <div className="flex items-center gap-4 px-2">
+            <Skeleton className="w-2 h-2 rounded-full" />
+            <Skeleton className="w-32 h-6" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {Array(4).fill(0).map((_, i) => (
+              <ElectionSkeleton key={i} />
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Active Elections */}
-      {activeElections.length > 0 && (
+      {!isLoading && activeElections.length > 0 && (
         <section className="space-y-6">
           <div className="flex items-center gap-4 px-2">
             <div className="w-2 h-2 bg-success-500 rounded-full animate-pulse shadow-neon-success" />
@@ -134,7 +146,7 @@ export function ElectionsList() {
       {/* Upcoming & Past Sections */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Upcoming Elections */}
-        {upcomingElections.length > 0 && (
+        {!isLoading && upcomingElections.length > 0 && (
           <section className="space-y-6">
             <div className="flex items-center gap-4 px-2">
               <Clock className="w-5 h-5 text-primary-500" />
@@ -168,7 +180,7 @@ export function ElectionsList() {
         )}
 
         {/* Past Elections */}
-        {pastElections.length > 0 && (
+        {!isLoading && pastElections.length > 0 && (
           <section className="space-y-6">
             <div className="flex items-center gap-4 px-2">
               <CheckCircle2 className="w-5 h-5 text-gray-400" />

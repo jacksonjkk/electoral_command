@@ -4,3 +4,6 @@
 "4/30/2026, 11:05:05 PM","4545ahec1234f@kab.ac.ug","Flagged (Security Audit)"
 "4/30/2026, 8:57:42 PM","2024ahec3942f@kab.ac.ug","Verified"
 "4/30/2026, 2:54:30 PM","2024akbc1234f@kab.ac.ug","Verified"
+5. EC Dashboard Breadcrumbs 🗺️
+Current State: EC Admins navigate between Dashboard → Manage Election → Add Candidates.
+The Plan: Add a sleek breadcrumb trail at the top of the EC pages (e.g., Home / 2024 Guild Elections / President / Candidates). This ensures admins never feel lost when managing massive elections with dozens of positions.

@@ -82,7 +82,7 @@ export const ECSignUp: React.FC = () => {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4 py-20 relative overflow-hidden">
+      <div className="flex items-center justify-center py-20 relative">
         <Card className="w-full max-w-xl !p-16 text-center relative overflow-hidden border-2 border-white/20 shadow-2xl">
           <div className="absolute top-0 left-0 w-full h-1 bg-success-500 animate-pulse" />
           <div className="w-24 h-24 bg-success-500/10 rounded-[32px] flex items-center justify-center mx-auto mb-8 border border-success-500/20 shadow-neon-success">
@@ -101,11 +101,7 @@ export const ECSignUp: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 md:py-20 relative overflow-hidden">
-      {/* Background Decorations - Optimized for Mobile */}
-      <div className="absolute top-0 right-0 w-[400px] md:w-[800px] h-[400px] md:h-[800px] bg-primary-600/5 rounded-full blur-[60px] md:blur-[120px] -mr-48 md:-mr-96 -mt-48 md:-mt-96 md:animate-pulse" />
-      <div className="absolute bottom-0 left-0 w-[300px] md:w-[600px] h-[300px] md:h-[400px] bg-accent-cyan/5 rounded-full blur-[40px] md:blur-[120px] -ml-24 md:-ml-48 -mb-24 md:-mb-48" />
-
+    <div className="flex flex-col items-center justify-center py-12 md:py-20 relative">
       <Card className="w-full max-w-xl !p-0 overflow-hidden relative z-10 border-2 border-white/20 shadow-2xl">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-600 via-accent-cyan to-primary-600" />
         

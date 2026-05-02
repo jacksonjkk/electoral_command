@@ -1,18 +1,17 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 import { Card, Button } from '@/components/UI';
-import { Shield, Zap, Globe, Lock, ArrowRight, Fingerprint, Activity, Terminal } from 'lucide-react';
+import { Shield, Zap, Globe, Lock, ArrowRight, Fingerprint, Activity, Terminal, Mail, MessageSquare, Send } from 'lucide-react';
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const isAdmin = user?.user_metadata?.role === 'ec_admin';
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Background Decorations - Optimized for Mobile */}
-      <div className="absolute top-0 right-0 w-[400px] md:w-[800px] h-[400px] md:h-[800px] bg-primary-500/5 rounded-full blur-[60px] md:blur-[150px] -mr-48 md:-mr-96 -mt-48 md:-mt-96 md:animate-pulse" />
-      <div className="absolute bottom-0 left-0 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-accent-cyan/5 rounded-full blur-[40px] md:blur-[120px] -ml-48 md:-ml-96 -mb-48 md:-mb-96" />
-
-      <div className="max-w-7xl mx-auto px-6 relative z-10 pt-4 md:pt-10">
+    <div className="relative">
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Hero Section */}
         <div className="text-center mb-24">
           <div className="inline-flex items-center gap-3 px-4 py-2 bg-white/40 backdrop-blur-md rounded-full border border-white/20 shadow-xl mb-8">
@@ -45,11 +44,11 @@ export const Home: React.FC = () => {
             <Button
               variant="secondary"
               size="lg"
-              onClick={() => navigate('/ec/login')}
+              onClick={() => navigate(isAdmin ? '/ec' : '/ec/login')}
               className="px-6 md:px-10 py-4 md:py-6 !rounded-[20px] md:!rounded-[24px] border-2 border-gray-100 text-xs md:text-sm font-black"
             >
-              Admin Login
-              <Terminal className="w-4 md:w-5 h-4 md:h-5 ml-2 md:ml-3" />
+              {isAdmin ? 'Go to Dashboard' : 'Admin Login'}
+              <Terminal className="w-4 h-4 md:w-5 md:h-5 ml-2 md:ml-3" />
             </Button>
           </div>
         </div>
@@ -83,10 +82,10 @@ export const Home: React.FC = () => {
               
               <div className="space-y-8">
                 {[
-                  { step: '01', title: 'Login with Email', desc: 'Use your official @kab.ac.ug email to get started.' },
-                  { step: '02', title: 'Choose Election', desc: 'Pick the election you want to participate in.' },
-                  { step: '03', title: 'Cast Your Vote', desc: 'Select your preferred candidates on the ballot.' },
-                  { step: '04', title: 'Success', desc: 'Your vote is recorded and added to the final count.' }
+                  { step: '01', title: 'Initialize Election', desc: 'Create and configure the election event with strict dates and registration rules.' },
+                  { step: '02', title: 'Onboard Candidates', desc: 'Define electoral positions and add candidate profiles with names and images.' },
+                  { step: '03', title: 'Authorize Voters', desc: 'Securely upload voter lists and send unique access links to authorized emails.' },
+                  { step: '04', title: 'Monitor & Publish', desc: 'Track live voter turnout and officially publish final results for public view.' }
                 ].map((item, i) => (
                   <div key={i} className="flex gap-6 group">
                     <div className="w-12 h-12 rounded-2xl bg-primary-50 flex items-center justify-center text-primary-600 font-black flex-shrink-0 group-hover:bg-primary-600 group-hover:text-white transition-colors">
@@ -119,18 +118,80 @@ export const Home: React.FC = () => {
           </div>
         </Card>
 
-        {/* Footer */}
-        <div className="mt-16 pt-8 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-8 pb-12">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg overflow-hidden shadow-sm border border-gray-100">
-              <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
+        {/* Contact Us Section */}
+        <section className="mt-32 mb-16">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="space-y-8">
+              <div>
+                <h2 className="text-4xl font-black text-gray-900 tracking-tight leading-tight uppercase mb-4">
+                  Get in <span className="text-primary-600">Touch</span>
+                </h2>
+                <p className="text-lg text-gray-500 font-medium leading-relaxed">
+                  Have questions about the voting system or need technical support? Our team is here to help you.
+                </p>
+              </div>
+
+              <div className="space-y-6">
+                <div className="flex items-center gap-6 p-6 bg-white/40 backdrop-blur-md rounded-3xl border border-white/20 shadow-xl group hover:border-primary-500/30 transition-all">
+                  <div className="w-12 h-12 rounded-2xl bg-primary-500 flex items-center justify-center text-white shadow-neon-primary group-hover:scale-110 transition-transform">
+                    <Mail className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Email Us</p>
+                    <p className="font-bold text-gray-900">support@axonlabs.com</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-6 p-6 bg-white/40 backdrop-blur-md rounded-3xl border border-white/20 shadow-xl group hover:border-accent-cyan/30 transition-all">
+                  <div className="w-12 h-12 rounded-2xl bg-accent-cyan flex items-center justify-center text-white shadow-neon-cyan group-hover:scale-110 transition-transform">
+                    <MessageSquare className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Live Chat</p>
+                    <p className="font-bold text-gray-900">Available 24/7</p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <span className="font-black text-xl tracking-tighter text-gray-900">ELECTORAL COMMAND V1.0</span>
+
+            <Card className="!p-8 md:!p-12 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/5 rounded-full blur-3xl -mr-32 -mt-32" />
+              <form className="space-y-6 relative z-10" onSubmit={(e) => e.preventDefault()}>
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Name</label>
+                    <input 
+                      type="text" 
+                      placeholder="Your Name"
+                      className="w-full bg-gray-50/50 border-2 border-gray-100 rounded-2xl px-6 py-4 focus:border-primary-500 outline-none transition-all font-bold text-gray-900"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Email</label>
+                    <input 
+                      type="email" 
+                      placeholder="Your Email"
+                      className="w-full bg-gray-50/50 border-2 border-gray-100 rounded-2xl px-6 py-4 focus:border-primary-500 outline-none transition-all font-bold text-gray-900"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Message</label>
+                  <textarea 
+                    rows={4}
+                    placeholder="How can we help you?"
+                    className="w-full bg-gray-50/50 border-2 border-gray-100 rounded-2xl px-6 py-4 focus:border-primary-500 outline-none transition-all font-bold text-gray-900 resize-none"
+                  ></textarea>
+                </div>
+                <Button fullWidth className="!py-4 !rounded-2xl shadow-neon-primary">
+                  Send Message
+                  <Send className="w-4 h-4 ml-2" />
+                </Button>
+              </form>
+            </Card>
           </div>
-          <p className="text-[10px] font-black text-gray-500 tracking-widest">
-            Developed by Axon LaBs • © {new Date().getFullYear()}
-          </p>
-        </div>
+        </section>
+
       </div>
     </div>
   );

@@ -150,7 +150,7 @@ export function ManageElection() {
       <div className="flex items-center justify-between">
         <button
           onClick={() => navigate('/ec')}
-          className="flex items-center gap-2 text-gray-500 hover:text-primary-600 transition-all font-black text-[10px] uppercase tracking-[0.2em] group"
+          className="flex items-center gap-2 text-gray-900 hover:text-primary-600 transition-all font-black text-[10px] uppercase tracking-[0.2em] group"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           Back to Dashboard

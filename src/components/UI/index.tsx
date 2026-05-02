@@ -311,7 +311,7 @@ export const EmptyState = ({
     <h3 className="text-2xl font-black text-gray-900 mb-2">{title}</h3>
     <p className="text-gray-500 font-medium mb-8 max-w-sm mx-auto">{message}</p>
     {action && (
-      <Button onClick={action.onClick} size="lg">{action.label}</Button>
+      <Button variant="secondary" onClick={action.onClick} size="lg" className="!rounded-2xl border-2 border-gray-100">{action.label}</Button>
     )}
   </Card>
 );

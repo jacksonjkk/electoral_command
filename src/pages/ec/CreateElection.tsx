@@ -79,7 +79,7 @@ export function CreateElection() {
     <div className="max-w-2xl mx-auto">
       <button
         onClick={() => navigate('/ec')}
-        className="flex items-center gap-2 mb-6 text-gray-600 hover:text-gray-900 transition-colors"
+        className="flex items-center gap-2 mb-6 text-gray-900 hover:text-primary-600 transition-colors"
       >
         <ArrowLeft className="w-5 h-5" />
         Back to Dashboard

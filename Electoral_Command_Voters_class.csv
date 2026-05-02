@@ -7,3 +7,4 @@
 5. EC Dashboard Breadcrumbs 🗺️
 Current State: EC Admins navigate between Dashboard → Manage Election → Add Candidates.
 The Plan: Add a sleek breadcrumb trail at the top of the EC pages (e.g., Home / 2024 Guild Elections / President / Candidates). This ensures admins never feel lost when managing massive elections with dozens of positions.
+

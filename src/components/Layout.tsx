@@ -16,6 +16,7 @@ export function Layout() {
   const isEcRoute = location.pathname.startsWith('/ec');
   const isVoterRoute = location.pathname.startsWith('/vote');
   const isPublicBallot = location.pathname.includes('/ballot/') || location.pathname.includes('/public-ballot/') || location.pathname.includes('/public-results/');
+  const isAuthRoute = location.pathname === '/ec/login' || location.pathname === '/ec/signup';
 
   return (
     <div className="min-h-screen relative flex flex-col">
@@ -115,7 +116,8 @@ export function Layout() {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-gray-100 py-12 md:py-16 bg-white/40 backdrop-blur-xl relative z-10">
+      {!isAuthRoute ? (
+        <footer className="border-t border-gray-100 py-12 md:py-16 bg-white/40 backdrop-blur-xl relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12 md:mb-20">
             <div className="col-span-1 md:col-span-2">
@@ -130,18 +132,10 @@ export function Layout() {
               </p>
             </div>
 
-            <div className="hidden md:block">
-              <p className="text-[10px] font-black text-gray-900 uppercase tracking-[0.3em] mb-6">Framework</p>
+            <div className="md:col-span-1">
+              <p className="text-[10px] font-black text-gray-900 uppercase tracking-[0.3em] mb-6">Support</p>
               <ul className="space-y-4">
-                <li className="text-sm font-bold text-gray-500 hover:text-primary-600 cursor-pointer transition-colors">Security Info</li>
-                <li className="text-sm font-bold text-gray-500 hover:text-primary-600 cursor-pointer transition-colors">Security Audit</li>
-              </ul>
-            </div>
-
-            <div className="hidden md:block">
-              <p className="text-[10px] font-black text-gray-900 uppercase tracking-[0.3em] mb-6">Links</p>
-              <ul className="space-y-4">
-                <li className="text-sm font-bold text-gray-500 hover:text-primary-600 cursor-pointer transition-colors">Support</li>
+                <li className="text-sm font-bold text-gray-500 hover:text-primary-600 cursor-pointer transition-colors">Help Center</li>
                 <li className="text-sm font-bold text-gray-500 hover:text-primary-600 cursor-pointer transition-colors">FAQ</li>
               </ul>
             </div>
@@ -149,17 +143,23 @@ export function Layout() {
 
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 pt-10 border-t border-gray-100">
             <div className="flex flex-col items-center md:items-start">
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] text-center md:text-left">
+              <p className="text-[10px] font-black text-gray-400 tracking-[0.3em] text-center md:text-left">
                 Developed by <span className="text-primary-600">Axon LaBs</span> • © {new Date().getFullYear()}
               </p>
             </div>
             <div className="flex gap-4 md:gap-8">
-              <span className="text-[8px] md:text-[10px] font-black text-primary-600 uppercase tracking-widest">Version 2.4.0</span>
-              <span className="text-[8px] md:text-[10px] font-black text-success-600 uppercase tracking-widest">System Online</span>
+              <span className="text-[8px] md:text-[10px] font-black text-primary-600 uppercase tracking-widest">Version 1.0</span>
             </div>
           </div>
         </div>
-      </footer>
+        </footer>
+      ) : (
+        <footer className="py-8 md:py-12 text-center relative z-10">
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em]">
+            Developed by <span className="text-primary-600">Axon LaBs</span> • © {new Date().getFullYear()}
+          </p>
+        </footer>
+      )}
     </div>
   );
 }

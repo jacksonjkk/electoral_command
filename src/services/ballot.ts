@@ -16,14 +16,14 @@ export const ballotService = {
       .from('voter_profiles')
       .select('*')
       .eq('voter_id', voterId)
-      .single();
+      .maybeSingle();
 
     if (existing) {
       return { voter_id: voterId, profile: existing };
     }
 
     // Create new voter profile
-    if (selectError?.code === 'PGRST116') {
+    if (!existing) {
       // No rows found, create new voter
       const { data: newVoter, error: insertError } = await supabase
         .from('voter_profiles')

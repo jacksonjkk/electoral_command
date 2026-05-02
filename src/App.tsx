@@ -72,11 +72,11 @@ export default function App() {
             {/* EC Admin Routes        */}
             {/* ======================= */}
 
-            {/* EC Login */}
-            <Route path="/ec/login" element={<SignIn />} />
-
-            {/* EC Sign Up */}
-            <Route path="/ec/signup" element={<ECSignUp />} />
+            {/* EC Auth Routes */}
+            <Route element={<Layout />}>
+              <Route path="/ec/login" element={<SignIn />} />
+              <Route path="/ec/signup" element={<ECSignUp />} />
+            </Route>
 
             {/* Protected EC Routes */}
             <Route
@@ -119,8 +119,9 @@ export default function App() {
             {/* Default Routes         */}
             {/* ======================= */}
 
-            {/* Home */}
-            <Route path="/" element={<Home />} />
+            <Route element={<Layout />}>
+              <Route path="/" element={<Home />} />
+            </Route>
 
             {/* 404 */}
             <Route path="*" element={<Navigate to="/" replace />} />

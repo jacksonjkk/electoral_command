@@ -179,7 +179,7 @@ export function ManagePosition() {
     <div className="space-y-6">
       <button
         onClick={() => navigate(`/ec/elections/${electionId}`)}
-        className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors font-black text-[10px] uppercase tracking-widest"
+        className="flex items-center gap-2 text-gray-900 hover:text-primary-600 transition-colors font-black text-[10px] uppercase tracking-widest"
       >
         <ArrowLeft className="w-5 h-5" />
         Back to Election Manager

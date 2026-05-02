@@ -19,7 +19,7 @@ export const useIsEcAdmin = (): boolean => {
       .from('ec_admins')
       .select('id')
       .eq('user_id', user.id)
-      .single()
+      .maybeSingle()
       .then(({ data }) => setIsAdmin(!!data));
   }, [user]);
 

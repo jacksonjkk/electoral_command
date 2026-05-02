@@ -32,6 +32,7 @@ import { PublishElection } from '@/pages/ec/PublishElection';
 
 // Layout
 import { Layout } from '@/components/Layout';
+import ScrollToTop from '@/components/ScrollToTop';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -46,6 +47,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
+        <ScrollToTop />
         <AuthProvider>
           <Routes>
             {/* ======================= */}

@@ -85,7 +85,7 @@ export function Layout() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 md:px-6 pt-28 md:pt-32 pb-60 md:pb-20 relative z-10">
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 md:px-6 pt-28 md:pt-32 pb-24 md:pb-12 relative z-10">
         <Outlet />
       </main>
 
@@ -115,7 +115,7 @@ export function Layout() {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-gray-100 py-12 md:py-20 bg-white/40 backdrop-blur-xl mt-20 relative z-10">
+      <footer className="border-t border-gray-100 py-12 md:py-16 bg-white/40 backdrop-blur-xl relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12 md:mb-20">
             <div className="col-span-1 md:col-span-2">
@@ -148,9 +148,11 @@ export function Layout() {
           </div>
 
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 pt-10 border-t border-gray-100">
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] text-center">
-              © {new Date().getFullYear()} Electoral Command
-            </p>
+            <div className="flex flex-col items-center md:items-start">
+              <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] text-center md:text-left">
+                Developed by <span className="text-primary-600">Axon LaBs</span> • © {new Date().getFullYear()}
+              </p>
+            </div>
             <div className="flex gap-4 md:gap-8">
               <span className="text-[8px] md:text-[10px] font-black text-primary-600 uppercase tracking-widest">Version 2.4.0</span>
               <span className="text-[8px] md:text-[10px] font-black text-success-600 uppercase tracking-widest">System Online</span>

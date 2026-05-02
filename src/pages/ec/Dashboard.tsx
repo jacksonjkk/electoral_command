@@ -26,7 +26,7 @@ export function ECDashboard() {
     elections?.filter((e) => getElectionStatus(e) === 'closed').length || 0;
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto pb-20">
+    <div className="space-y-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white/40 backdrop-blur-xl p-8 rounded-3xl border border-white/20 shadow-xl">
         <div>

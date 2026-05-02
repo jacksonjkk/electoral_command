@@ -146,7 +146,7 @@ export function ManageElection() {
   }
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto pb-20">
+    <div className="space-y-8 max-w-7xl mx-auto">
       <div className="flex items-center justify-between">
         <button
           onClick={() => navigate('/ec')}

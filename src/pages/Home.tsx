@@ -7,7 +7,7 @@ export const Home: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen relative overflow-hidden pb-20">
+    <div className="min-h-screen relative overflow-hidden">
       {/* Background Decorations - Optimized for Mobile */}
       <div className="absolute top-0 right-0 w-[400px] md:w-[800px] h-[400px] md:h-[800px] bg-primary-500/5 rounded-full blur-[60px] md:blur-[150px] -mr-48 md:-mr-96 -mt-48 md:-mt-96 md:animate-pulse" />
       <div className="absolute bottom-0 left-0 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-accent-cyan/5 rounded-full blur-[40px] md:blur-[120px] -ml-48 md:-ml-96 -mb-48 md:-mb-96" />
@@ -123,10 +123,10 @@ export const Home: React.FC = () => {
         <div className="mt-32 pt-16 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-primary-600 rounded-lg shadow-neon-primary" />
-            <span className="font-black text-xl tracking-tighter text-gray-900">ELECTORAL_COMMAND_v2.0</span>
+            <span className="font-black text-xl tracking-tighter text-gray-900">ELECTORAL COMMAND 1.0</span>
           </div>
           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-            Developed for Professional Educational Infrastructures • © 2026
+            Developed by Axon LaBs • © 2026
           </p>
         </div>
       </div>

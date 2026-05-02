@@ -52,7 +52,7 @@ export function ElectionsList() {
   );
 
   return (
-    <div className="space-y-12 max-w-7xl mx-auto pb-24">
+    <div className="space-y-12 max-w-7xl mx-auto">
       {/* Voter Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-8 bg-white/40 backdrop-blur-xl p-6 md:p-10 rounded-[32px] md:rounded-[40px] border border-white/20 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/5 rounded-full blur-3xl -mr-32 -mt-32" />

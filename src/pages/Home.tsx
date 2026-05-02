@@ -120,13 +120,15 @@ export const Home: React.FC = () => {
         </Card>
 
         {/* Footer */}
-        <div className="mt-32 pt-16 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="mt-16 pt-8 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-8 pb-12">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-primary-600 rounded-lg shadow-neon-primary" />
-            <span className="font-black text-xl tracking-tighter text-gray-900">ELECTORAL COMMAND 1.0</span>
+            <div className="w-8 h-8 rounded-lg overflow-hidden shadow-sm border border-gray-100">
+              <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
+            </div>
+            <span className="font-black text-xl tracking-tighter text-gray-900">ELECTORAL COMMAND V1.0</span>
           </div>
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-            Developed by Axon LaBs • © 2026
+          <p className="text-[10px] font-black text-gray-500 tracking-widest">
+            Developed by Axon LaBs • © {new Date().getFullYear()}
           </p>
         </div>
       </div>

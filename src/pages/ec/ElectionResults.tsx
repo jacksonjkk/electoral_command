@@ -188,9 +188,9 @@ export function ElectionResults() {
                       const percentage = totalVotes > 0
                         ? ((candidate.votes / totalVotes) * 100).toFixed(1)
                         : '0';
-                      const isLeading = index === 0 &&
-                        candidate.votes > 0 &&
-                        (sortedCandidates.length === 1 || candidate.votes > sortedCandidates[1].votes);
+                      // Show Leading/Winner on the top candidate of EVERY position
+                      const isLeading = index === 0 && candidate.votes > 0;
+
 
                       return (
                         <div

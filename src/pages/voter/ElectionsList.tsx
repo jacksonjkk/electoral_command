@@ -41,13 +41,13 @@ export function ElectionsList() {
     );
   }
 
-  const activeElections = elections.filter(
+  const activeElections = (elections || []).filter(
     (e) => getElectionStatus(e) === 'active'
   );
-  const upcomingElections = elections.filter(
+  const upcomingElections = (elections || []).filter(
     (e) => getElectionStatus(e) === 'scheduled'
   );
-  const pastElections = elections.filter(
+  const pastElections = (elections || []).filter(
     (e) => getElectionStatus(e) === 'closed'
   );
 

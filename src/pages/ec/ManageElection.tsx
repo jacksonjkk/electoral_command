@@ -35,6 +35,7 @@ export function ManageElection() {
   const [editStartTime, setEditStartTime] = useState(formatForInput(election?.start_time));
   const [editEndTime, setEditEndTime] = useState(formatForInput(election?.end_time));
   const [editRegNoRule, setEditRegNoRule] = useState(election?.reg_no_rule || '');
+  const [editShowLiveResults, setEditShowLiveResults] = useState(election?.show_live_results || false);
   const [savingEdit, setSavingEdit] = useState(false);
 
   const handleDeleteElection = async () => {
@@ -67,6 +68,7 @@ export function ManageElection() {
           start_time: new Date(editStartTime).toISOString(),
           end_time: new Date(editEndTime).toISOString(),
           reg_no_rule: editRegNoRule || undefined,
+          show_live_results: editShowLiveResults,
         },
         user!.id
       );
@@ -224,6 +226,7 @@ export function ManageElection() {
                   setEditStartTime(formatForInput(election.start_time));
                   setEditEndTime(formatForInput(election.end_time));
                   setEditRegNoRule(election.reg_no_rule || '');
+                  setEditShowLiveResults(election.show_live_results || false);
                 }}
               >
                 <Edit2 className="w-4 h-4" />
@@ -430,6 +433,23 @@ export function ManageElection() {
                     );
                   })}
                 </div>
+              </div>
+
+              <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm font-bold text-gray-900 tracking-wider">Show Live Results</h3>
+                  <p className="text-xs text-gray-500">Allow voters to see live results immediately after voting.</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    className="sr-only peer" 
+                    checked={editShowLiveResults}
+                    onChange={(e) => setEditShowLiveResults(e.target.checked)}
+                    disabled={savingEdit}
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
+                </label>
               </div>
             </div>
 

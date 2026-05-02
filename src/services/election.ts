@@ -16,7 +16,8 @@ export const electionService = {
     start_time: string,
     end_time: string,
     userId: string,
-    reg_no_rule?: string
+    reg_no_rule?: string,
+    show_live_results?: boolean
   ): Promise<Election> => {
     try {
       const { data, error } = await supabase
@@ -30,6 +31,7 @@ export const electionService = {
             status: 'scheduled',
             created_by: userId,
             reg_no_rule,
+            show_live_results: show_live_results ?? false,
           },
         ])
         .select()
@@ -125,6 +127,7 @@ export const electionService = {
       start_time?: string;
       end_time?: string;
       reg_no_rule?: string;
+      show_live_results?: boolean;
     },
     userId: string
   ): Promise<Election> => {

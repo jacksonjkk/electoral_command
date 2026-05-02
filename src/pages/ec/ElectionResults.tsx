@@ -21,7 +21,7 @@ export function ElectionResults() {
 
   const isPublicView = location.pathname.startsWith('/public-results');
   // Determine if results are published for public view
-  const resultsPublished = election?.results_published;
+  const resultsPublished = election?.results_published || election?.show_live_results;
 
 
   const handleExportVoters = async () => {

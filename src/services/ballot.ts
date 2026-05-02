@@ -170,6 +170,24 @@ export const ballotService = {
   },
 
   /**
+   * Get detailed receipt of voter's choices
+   */
+  getVoterReceipt: async (voterId: string, electionId: string) => {
+    const { data, error } = await supabase
+      .from('votes')
+      .select(`
+        id,
+        positions ( position_name ),
+        candidates ( name, image_url )
+      `)
+      .eq('voter_id', voterId)
+      .eq('election_id', electionId);
+
+    if (error) throw error;
+    return data;
+  },
+
+  /**
    * Submit a vote
    * This is protected by RLS at the database level
    */

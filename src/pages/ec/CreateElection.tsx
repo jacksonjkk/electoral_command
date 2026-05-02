@@ -15,6 +15,7 @@ export function CreateElection() {
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [regNoRule, setRegNoRule] = useState('');
+  const [showLiveResults, setShowLiveResults] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -53,7 +54,8 @@ export function CreateElection() {
         startISO,
         endISO,
         user!.id,
-        regNoRule || undefined
+        regNoRule || undefined,
+        showLiveResults
       );
 
       navigate(`/ec/elections/${newElection.id}`, {
@@ -169,6 +171,22 @@ export function CreateElection() {
                     );
                   })}
                 </div>
+              </div>
+
+              <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm font-bold text-gray-900 tracking-wider">Show Live Results</h3>
+                  <p className="text-xs text-gray-500">Allow voters to see live results immediately after voting.</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    className="sr-only peer" 
+                    checked={showLiveResults}
+                    onChange={(e) => setShowLiveResults(e.target.checked)}
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
+                </label>
               </div>
             </div>
 

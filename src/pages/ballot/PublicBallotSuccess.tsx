@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import { Card, Button } from '@/components/UI';
-import { CheckCircle2, ShieldCheck, ArrowRight } from 'lucide-react';
+import { Card, Button, Loading } from '@/components/UI';
+import { CheckCircle2, ShieldCheck, ArrowRight, User } from 'lucide-react';
+import { generateVoterId } from '@/utils/helpers';
+import { ballotService } from '@/services/ballot';
 
 export const PublicBallotSuccess: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { electionId } = useParams();
-  const [countdown, setCountdown] = useState(8);
+  const [receipt, setReceipt] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const email = location.state?.email || 'voter';
 
   useEffect(() => {
@@ -16,19 +19,21 @@ export const PublicBallotSuccess: React.FC = () => {
       localStorage.setItem(`voted_${electionId}`, 'true');
     }
 
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          navigate(`/public-results/${electionId}`);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    const fetchReceipt = async () => {
+      if (!electionId || !email) return;
+      try {
+        const voterId = generateVoterId(email);
+        const data = await ballotService.getVoterReceipt(voterId, electionId);
+        setReceipt(data || []);
+      } catch (err) {
+        console.error('Failed to fetch receipt:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    return () => clearInterval(timer);
-  }, [navigate, electionId]);
+    fetchReceipt();
+  }, [electionId, email]);
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-20 relative overflow-hidden">
@@ -62,8 +67,37 @@ export const PublicBallotSuccess: React.FC = () => {
             </div>
           </div>
 
+          {/* Voter Receipt Section */}
+          <div className="mt-8 pt-8 border-t border-gray-100 text-left">
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-6 text-center">Your Ballot Receipt</p>
+            
+            {loading ? (
+              <div className="flex justify-center p-4"><Loading size="sm" /></div>
+            ) : receipt.length > 0 ? (
+              <div className="space-y-3 mb-8">
+                {receipt.map((vote) => (
+                  <div key={vote.id} className="bg-white border border-gray-100 rounded-2xl p-4 flex items-center justify-between shadow-sm">
+                    <div>
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{vote.positions?.position_name}</p>
+                      <p className="text-sm font-black text-gray-900 mt-0.5">{vote.candidates?.name}</p>
+                    </div>
+                    {vote.candidates?.image_url ? (
+                      <img src={vote.candidates.image_url} alt={vote.candidates.name} className="w-10 h-10 rounded-full object-cover border border-gray-100" />
+                    ) : (
+                      <div className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center border border-gray-100">
+                        <User className="w-4 h-4 text-gray-400" />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500 text-center mb-8">No votes found.</p>
+            )}
+          </div>
+
           {/* Social Sharing Section */}
-          <div className="mt-8 pt-8 border-t border-gray-100">
+          <div className="mt-4 pt-8 border-t border-gray-100">
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-6">Encourage others to vote</p>
             <div className="flex items-center justify-center gap-4 md:gap-6">
               {/* WhatsApp (Flaticon Style) */}
@@ -80,7 +114,7 @@ export const PublicBallotSuccess: React.FC = () => {
                 </svg>
               </button>
 
-              {/* Twitter / X (Precision Logo) */}
+              {/* Twitter / X */}
               <button className="w-12 h-12 rounded-2xl bg-black/5 text-black flex items-center justify-center hover:bg-black hover:text-white transition-all hover:-translate-y-1 shadow-lg border border-black/10">
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
                   <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/>
@@ -94,13 +128,9 @@ export const PublicBallotSuccess: React.FC = () => {
               size="lg"
               className="!rounded-[24px] py-6 shadow-neon-success mt-10"
             >
-              View Live Results
+              Check Election Results
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
-
-            <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest animate-pulse mt-4">
-              Redirecting you to results in {countdown} seconds...
-            </p>
           </div>
 
           {/* Hidden Icon Attribution for Compliance */}

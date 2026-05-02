@@ -28,6 +28,7 @@ export interface Election {
   updated_at: string;
   reg_no_rule?: string;
   results_published?: boolean;
+  show_live_results?: boolean;
 }
 
 export interface Position {

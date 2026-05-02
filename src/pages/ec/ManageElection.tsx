@@ -240,8 +240,8 @@ export function ManageElection() {
               </Button>
             </div>
 
-            {/* Publish/Unpublish Results Button — EC Admins only, shown when election is closed */}
-            {getElectionStatus(election) === 'closed' && (
+            {/* Publish/Unpublish Results Button — shown when election is closed AND live results are NOT enabled */}
+            {getElectionStatus(election) === 'closed' && !election.show_live_results && (
               <Button
                 variant={election.results_published ? 'danger' : 'success'}
                 className="!rounded-2xl"

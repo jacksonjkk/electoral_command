@@ -72,7 +72,7 @@ export const PublicBallotSuccess: React.FC = () => {
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-6 text-center">Your Ballot Receipt</p>
             
             {loading ? (
-              <div className="flex justify-center p-4"><Loading size="sm" /></div>
+              <div className="flex justify-center p-4"><Loading /></div>
             ) : receipt.length > 0 ? (
               <div className="space-y-3 mb-8">
                 {receipt.map((vote) => (

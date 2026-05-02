@@ -96,7 +96,6 @@ export const PublicBallotEntry: React.FC = () => {
       }
 
       const redirectTo = `${window.location.origin}/public-ballot/${electionId}`;
-      console.log('[Magic Link] Redirect URL:', redirectTo);
 
       const { error: authError } = await supabase.auth.signInWithOtp({
         email,

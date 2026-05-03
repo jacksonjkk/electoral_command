@@ -117,13 +117,21 @@ export const getTimeRemaining = (endTime: string): string => {
 };
 
 /**
- * Validate official university email strictly
+ * Validate official university email strictly for students
  * Pattern: 20[Year]a[CourseCode][f/gf]@kab.ac.ug
  * Example: 2024abc123f@kab.ac.ug
  */
-export const isValidEmailDomain = (email: string): boolean => {
+export const isValidStudentEmail = (email: string): boolean => {
   const studentEmailRegex = /^20\d{2}a[a-z0-9]+(f|gf)@kab\.ac\.ug$/i;
   return studentEmailRegex.test(email.trim());
+};
+
+/**
+ * Validate email domain generally
+ * Pattern: any@kab.ac.ug
+ */
+export const isValidEmailDomain = (email: string): boolean => {
+  return email.trim().toLowerCase().endsWith('@kab.ac.ug');
 };
 
 /**

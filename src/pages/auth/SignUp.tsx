@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button, Input, Alert } from '@/components/UI';
 import { authService } from '@/services/auth';
+import { isValidStudentEmail } from '@/utils/helpers';
 
 export function SignUp() {
   const navigate = useNavigate();
@@ -27,8 +28,8 @@ export function SignUp() {
     setError('');
 
     // Validate email domain
-    if (!authService.isValidEmailDomain(email)) {
-      setError('Only @kab.ac.ug email addresses are allowed');
+    if (!isValidStudentEmail(email)) {
+      setError('Only official @kab.ac.ug student emails (e.g., 2024abc123f@kab.ac.ug) are allowed');
       return;
     }
 

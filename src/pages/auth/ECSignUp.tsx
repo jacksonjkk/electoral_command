@@ -49,7 +49,7 @@ export const ECSignUp: React.FC = () => {
 
     try {
       const { data, error: signUpError } = await supabase.auth.signUp({
-        email: email.trim(),
+        email: email.trim().toLowerCase(),
         password: password,
         options: {
           data: { role: 'ec_admin' },
@@ -58,20 +58,18 @@ export const ECSignUp: React.FC = () => {
       });
 
       if (signUpError) throw signUpError;
+      
+      // Supabase quirk: If user exists but is unverified, it returns success but empty identities
+      if (data.user && (!data.user.identities || data.user.identities.length === 0)) {
+        throw new Error('This email is already registered. If you didn\'t get an email, try logging in to resend the link.');
+      }
+
       if (!data.user) throw new Error('Failed to initialize administrator profile.');
 
       setSuccess(true);
       setEmail('');
       setPassword('');
       setConfirmPassword('');
-
-      setTimeout(() => {
-        navigate('/ec/login', {
-          state: {
-            message: 'Verification packet transmitted. Check your inbox to authorize your node.',
-          },
-        });
-      }, 3000);
     } catch (err) {
       const error = err as Error;
       setError(error.message || 'Sign up failed. Please try again.');
@@ -88,13 +86,18 @@ export const ECSignUp: React.FC = () => {
           <div className="w-24 h-24 bg-success-500/10 rounded-[32px] flex items-center justify-center mx-auto mb-8 border border-success-500/20 shadow-neon-success">
             <ShieldCheck className="w-12 h-12 text-success-600" />
           </div>
-        <h1 className="text-4xl font-black text-gray-900 mb-6 tracking-tight">Account Created!</h1>
+        <h1 className="text-4xl font-black text-gray-900 mb-6 tracking-tight">Check Your Email</h1>
         <p className="text-gray-500 font-medium mb-10 leading-relaxed max-w-sm mx-auto">
-          Your account has been created. Please check your email to verify your account.
+          We've sent a verification link to your inbox. Please click the link to authorize your administrator node.
         </p>
-        <p className="text-[10px] font-black text-primary-600 uppercase tracking-[0.3em] animate-pulse">
-          Redirecting to Login...
-        </p>
+        <div className="space-y-4">
+          <Button fullWidth onClick={() => navigate('/ec/login')}>
+            Go to Login
+          </Button>
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
+            Didn't get the email? Check your spam folder.
+          </p>
+        </div>
         </Card>
       </div>
     );

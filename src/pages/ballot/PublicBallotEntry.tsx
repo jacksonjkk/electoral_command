@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import { supabase } from '@/services/supabase';
 import { ballotService } from '@/services/ballot';
 import { Button, Input, Alert, Loading, Card, EmptyState } from '@/components/UI';
-import { isValidEmailDomain, getTimeRemaining } from '@/utils/helpers';
+import { isValidStudentEmail, getTimeRemaining } from '@/utils/helpers';
 import { ShieldCheck, Lock, ArrowRight, Fingerprint, Mail, Clock } from 'lucide-react';
 import { Election } from '@/types';
 import clsx from 'clsx';
@@ -59,7 +59,7 @@ export const PublicBallotEntry: React.FC = () => {
 
     try {
       // Validate official student email format
-      if (!isValidEmailDomain(email)) {
+      if (!isValidStudentEmail(email)) {
         throw new Error('Invalid format. Use: 20[Year]a[CourseCode][f/gf]@kab.ac.ug (e.g., 2024abc123f@kab.ac.ug)');
       }
 

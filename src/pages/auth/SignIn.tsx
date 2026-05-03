@@ -12,6 +12,8 @@ export function SignIn() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,8 +31,38 @@ export function SignIn() {
         navigate('/ec');
       }, 500);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Authentication sequence failed');
+      const msg = err instanceof Error ? err.message : 'Authentication sequence failed';
+      if (msg.includes('Email not confirmed')) {
+        setError('Your email has not been verified yet. Please check your inbox or resend the link.');
+      } else {
+        setError(msg);
+      }
       setLoading(false);
+    }
+  };
+
+  const handleResendEmail = async () => {
+    if (!email) {
+      setError('Enter your email to resend the verification link.');
+      return;
+    }
+    setResending(true);
+    setError('');
+    setResendSuccess('');
+    try {
+      const { error: resendError } = await supabase.auth.resend({
+        type: 'signup',
+        email: email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/ec/login`,
+        }
+      });
+      if (resendError) throw resendError;
+      setResendSuccess('Verification link resent! Check your inbox.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to resend email');
+    } finally {
+      setResending(false);
     }
   };
 
@@ -57,6 +89,15 @@ export function SignIn() {
                 message={error}
                 className="rounded-2xl md:rounded-[24px]"
                 onClose={() => setError('')}
+              />
+            )}
+            {resendSuccess && (
+              <Alert
+                variant="success"
+                title="Email Sent"
+                message={resendSuccess}
+                className="rounded-2xl md:rounded-[24px]"
+                onClose={() => setResendSuccess('')}
               />
             )}
 
@@ -96,11 +137,22 @@ export function SignIn() {
               size="lg"
               className="!rounded-xl md:!rounded-[24px] py-4 md:py-6 shadow-neon-primary text-sm font-black uppercase tracking-widest"
               isLoading={loading}
-              disabled={!email || !password}
+              disabled={!email || !password || resending}
             >
               Authorize
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
+
+            {error.includes('verified') && (
+              <button
+                type="button"
+                onClick={handleResendEmail}
+                disabled={resending}
+                className="w-full text-[10px] font-black text-primary-600 uppercase tracking-widest hover:text-primary-700 transition-colors"
+              >
+                {resending ? 'Transmitting...' : 'Resend Verification Link'}
+              </button>
+            )}
           </form>
 
           <div className="flex items-center gap-4">

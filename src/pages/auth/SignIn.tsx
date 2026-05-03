@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button, Input, Alert, Card } from '@/components/UI';
 import { authService } from '@/services/auth';
+import { supabase } from '@/services/supabase';
 import { ShieldCheck, Lock, ArrowRight, Fingerprint, Mail, Key } from 'lucide-react';
 
 export function SignIn() {

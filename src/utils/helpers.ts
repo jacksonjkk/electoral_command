@@ -152,11 +152,14 @@ export const formatPercentage = (value: number, total: number): string => {
 /**
  * Get initials from name
  */
-export const getInitials = (name: string): string => {
+export const getInitials = (name: string | null | undefined): string => {
+  if (!name) return '??';
+  
   return name
-    .split(' ')
+    .trim()
+    .split(/\s+/)
     .slice(0, 2)
-    .map((part) => part[0].toUpperCase())
+    .map((part) => (part && part[0] ? part[0].toUpperCase() : ''))
     .join('');
 };
 

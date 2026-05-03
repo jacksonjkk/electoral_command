@@ -9,7 +9,7 @@ import { Card, Button, Loading, Alert, Input, Textarea, EmptyState } from '@/com
 import { formatDateTime, getElectionStatus, formatForInput } from '@/utils/helpers';
 import { ArrowLeft, Plus, Trash2, Edit2, Activity, Users, Check } from 'lucide-react';
 
-const COMMON_COURSES = ['KEP', 'BSCED', 'KSE', 'HEC', 'BIT', 'KCS', 'BBA', 'LLB'];
+const COMMON_COURSES = ['KEP', 'BSCED', 'KSE', 'HEC', 'BIT', 'KCS', 'BBA', 'KBL'];
 
 export function ManageElection() {
   const { electionId } = useParams<{ electionId: string }>();

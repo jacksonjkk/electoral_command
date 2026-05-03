@@ -53,7 +53,7 @@ export const ECSignUp: React.FC = () => {
         password: password,
         options: {
           data: { role: 'ec_admin' },
-          emailRedirectTo: `${window.location.origin}/ec/login`,
+          emailRedirectTo: `${window.location.origin}/ec`,
         },
       });
 

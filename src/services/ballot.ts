@@ -177,7 +177,7 @@ export const ballotService = {
       .from('votes')
       .select(`
         id,
-        positions ( position_name ),
+        positions ( name ),
         candidates ( name, image_url )
       `)
       .eq('voter_id', voterId)

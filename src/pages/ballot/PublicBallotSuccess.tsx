@@ -78,7 +78,7 @@ export const PublicBallotSuccess: React.FC = () => {
                 {receipt.map((vote) => (
                   <div key={vote.id} className="bg-white border border-gray-100 rounded-2xl p-4 flex items-center justify-between shadow-sm">
                     <div>
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{vote.positions?.position_name}</p>
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{vote.positions?.name}</p>
                       <p className="text-sm font-black text-gray-900 mt-0.5">{vote.candidates?.name}</p>
                     </div>
                     {vote.candidates?.image_url ? (

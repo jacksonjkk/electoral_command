@@ -4,6 +4,7 @@ import { Card, Button, Loading } from '@/components/UI';
 import { CheckCircle2, ShieldCheck, ArrowRight, User } from 'lucide-react';
 import { generateVoterId } from '@/utils/helpers';
 import { ballotService } from '@/services/ballot';
+import { resolveCandidateImageUrl } from '@/utils/storage';
 
 export const PublicBallotSuccess: React.FC = () => {
   const navigate = useNavigate();
@@ -70,7 +71,7 @@ export const PublicBallotSuccess: React.FC = () => {
           {/* Voter Receipt Section */}
           <div className="mt-8 pt-8 border-t border-gray-100 text-left">
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-6 text-center">Your Ballot Receipt</p>
-            
+
             {loading ? (
               <div className="flex justify-center p-4"><Loading /></div>
             ) : receipt.length > 0 ? (
@@ -78,11 +79,19 @@ export const PublicBallotSuccess: React.FC = () => {
                 {receipt.map((vote) => (
                   <div key={vote.id} className="bg-white border border-gray-100 rounded-2xl p-4 flex items-center justify-between shadow-sm">
                     <div>
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{vote.positions?.name}</p>
-                      <p className="text-sm font-black text-gray-900 mt-0.5">{vote.candidates?.name}</p>
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                        {Array.isArray(vote.positions) ? vote.positions[0]?.name : vote.positions?.name}
+                      </p>
+                      <p className="text-sm font-black text-gray-900 mt-0.5">
+                        {Array.isArray(vote.candidates) ? vote.candidates[0]?.name : vote.candidates?.name}
+                      </p>
                     </div>
-                    {vote.candidates?.image_url ? (
-                      <img src={vote.candidates.image_url} alt={vote.candidates.name} className="w-10 h-10 rounded-full object-cover border border-gray-100" />
+                    {((Array.isArray(vote.candidates) ? vote.candidates[0] : vote.candidates)?.image_url) ? (
+                      <img 
+                        src={resolveCandidateImageUrl((Array.isArray(vote.candidates) ? vote.candidates[0] : vote.candidates).image_url)} 
+                        alt={(Array.isArray(vote.candidates) ? vote.candidates[0] : vote.candidates).name} 
+                        className="w-10 h-10 rounded-full object-cover border border-gray-100" 
+                      />
                     ) : (
                       <div className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center border border-gray-100">
                         <User className="w-4 h-4 text-gray-400" />

@@ -16,7 +16,7 @@ export const PublicBallot: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const email = location.state?.email || '';
-  
+
   // Retrieve voter ID from secure session storage instead of URL
   const [voterId, setVoterId] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string>(location.state?.email || '');
@@ -24,7 +24,7 @@ export const PublicBallot: React.FC = () => {
   const [selectedVotes, setSelectedVotes] = useState<Record<string, string>>({});
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [error, setError] = useState('');
-  
+
   // Live timer for countdowns and auto-transitions
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -39,11 +39,11 @@ export const PublicBallot: React.FC = () => {
     const initializeVoter = async () => {
       // Check if arriving from a Magic Link (Supabase Auth Session)
       const { data: { session } } = await supabase.auth.getSession();
-      
+
       if (session?.user?.email) {
         const email = session.user.email;
         if (isMounted) setUserEmail(email);
-        
+
         try {
           const voterData = await ballotService.getOrCreateVoter(email);
           if (voterData?.voter_id) {
@@ -119,10 +119,10 @@ export const PublicBallot: React.FC = () => {
       onSuccess: () => {
         // Clear session after successful vote
         sessionStorage.removeItem(`voter_session_${electionId}`);
-        
+
         // Also sign out from Supabase to clear the magic link session so they can't vote again
         supabase.auth.signOut();
-        
+
         navigate(`/public-ballot/${electionId}/success`, {
           state: { email: userEmail },
         });
@@ -292,9 +292,9 @@ export const PublicBallot: React.FC = () => {
                           )}
                         />
                       ) : null}
-                      
+
                       {/* Fallback avatar (Initials) */}
-                      <div 
+                      <div
                         className={clsx(
                           "w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100",
                           candidate.image_url ? "hidden" : ""
@@ -360,24 +360,24 @@ export const PublicBallot: React.FC = () => {
                   'text-xl md:text-4xl font-black tracking-tight transition-colors duration-500',
                   hasSelectedAllPositions ? 'text-success-600' : 'text-gray-900'
                 )}>
-                  {hasSelectedAllPositions 
-                    ? 'Ready to Submit' 
+                  {hasSelectedAllPositions
+                    ? 'Ready to Submit'
                     : 'Selections Incomplete'}
                 </h3>
                 <p className="text-xs md:text-lg font-medium text-gray-500 mt-1">
-                  {hasSelectedAllPositions 
-                    ? 'You have selected a candidate for every position.' 
+                  {hasSelectedAllPositions
+                    ? 'You have selected a candidate for every position.'
                     : `Please choose a candidate for all ${ballot.length} positions.`}
                 </p>
               </div>
             </div>
-            
+
             <Button
               size="lg"
               className={clsx(
                 '!rounded-2xl md:!rounded-[32px] transition-all duration-500 w-full md:w-auto px-12 md:px-16 py-6 md:py-10 text-lg md:text-2xl font-black uppercase tracking-widest',
-                hasSelectedAllPositions 
-                  ? 'bg-primary-600 shadow-neon-primary hover:scale-105 active:scale-95' 
+                hasSelectedAllPositions
+                  ? 'bg-primary-600 shadow-neon-primary hover:scale-105 active:scale-95'
                   : 'bg-gray-200 text-gray-400 cursor-not-allowed opacity-50'
               )}
               isLoading={submitVoteMutation.isLoading}

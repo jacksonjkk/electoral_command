@@ -202,7 +202,7 @@ export function Ballot() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto pb-32">
+        <div className="max-w-7xl mx-auto pb-40 md:pb-32">
       {/* Terminal Header */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 md:gap-8 mb-8 md:mb-12 bg-white/40 backdrop-blur-xl p-6 md:p-10 rounded-[32px] md:rounded-[40px] border border-white/20 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/5 rounded-full blur-3xl -mr-32 -mt-32" />
@@ -311,7 +311,7 @@ export function Ballot() {
       </div>
 
       {/* Floating Action Bar */}
-      <div className="fixed bottom-24 md:bottom-10 left-4 md:left-1/2 md:-translate-x-1/2 right-4 md:w-full md:max-w-xl z-50">
+      <div className="fixed bottom-4 md:bottom-10 left-4 md:left-1/2 md:-translate-x-1/2 right-4 md:w-full md:max-w-xl z-50">
         <div className="bg-gray-900/90 backdrop-blur-2xl p-2 md:p-4 rounded-[24px] md:rounded-[32px] border border-white/20 shadow-2xl flex items-center gap-3 md:gap-4">
           <div className="flex-1 pl-3 md:pl-4">
             <p className="text-[8px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest">Voting Progress</p>

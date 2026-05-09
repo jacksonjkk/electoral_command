@@ -208,7 +208,7 @@ export function ElectionResults() {
                                 <img
                                   src={candidate.image_url}
                                   alt={candidate.name}
-                                  className="w-14 h-14 md:w-20 md:h-20 object-cover rounded-xl md:rounded-2xl ring-2 md:ring-4 ring-white shadow-xl"
+                                  className="w-14 h-14 md:w-20 md:h-20 object-cover object-top rounded-xl md:rounded-2xl ring-2 md:ring-4 ring-white shadow-xl"
                                 />
                               ) : (
                                 <div className="w-14 h-14 md:w-20 md:h-20 bg-gray-100 rounded-xl md:rounded-2xl flex items-center justify-center text-gray-400 border-2 border-dashed border-gray-200">
@@ -314,7 +314,7 @@ export function ElectionResults() {
                           ? "bg-white/5 border border-white/10 text-primary-400 group-hover:bg-primary-500 group-hover:text-white" 
                           : "bg-red-500 text-white shadow-neon-danger"
                       )}>
-                        {vote.voter_profiles.email[0].toUpperCase()}
+                        <Users className="w-5 h-5" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">

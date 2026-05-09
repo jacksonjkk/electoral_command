@@ -231,7 +231,7 @@ export const PublishElection: React.FC = () => {
                         <img
                           src={candidate.image_url}
                           alt={candidate.name}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover object-top"
                         />
                       </div>
                     ) : (

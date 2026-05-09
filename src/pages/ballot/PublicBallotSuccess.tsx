@@ -90,7 +90,7 @@ export const PublicBallotSuccess: React.FC = () => {
                       <img 
                         src={resolveCandidateImageUrl((Array.isArray(vote.candidates) ? vote.candidates[0] : vote.candidates).image_url)} 
                         alt={(Array.isArray(vote.candidates) ? vote.candidates[0] : vote.candidates).name} 
-                        className="w-10 h-10 rounded-full object-cover border border-gray-100" 
+                        className="w-10 h-10 rounded-full object-cover object-top border border-gray-100" 
                       />
                     ) : (
                       <div className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center border border-gray-100">

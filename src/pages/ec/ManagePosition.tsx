@@ -232,7 +232,7 @@ export function ManagePosition() {
                   <img
                     src={URL.createObjectURL(selectedFile)}
                     alt="Preview"
-                    className="w-24 h-24 object-cover rounded-lg mx-auto"
+                    className="w-24 h-24 object-cover object-top rounded-lg mx-auto"
                   />
                   <p className="text-sm font-medium text-gray-900">{selectedFile.name}</p>
                   <p className="text-xs text-gray-500">{formatBytes(selectedFile.size)}</p>
@@ -297,7 +297,7 @@ export function ManagePosition() {
                     <img
                       src={candidate.image_url}
                       alt={candidate.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover object-top"
                     />
                   </div>
                 ) : (
@@ -388,7 +388,7 @@ export function ManagePosition() {
                       <img
                         src={URL.createObjectURL(editSelectedFile)}
                         alt="Preview"
-                        className="w-20 h-20 object-cover rounded-lg mx-auto"
+                        className="w-20 h-20 object-cover object-top rounded-lg mx-auto"
                       />
                       <p className="text-sm font-medium text-gray-900">{editSelectedFile.name}</p>
                       <button

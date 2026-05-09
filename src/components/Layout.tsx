@@ -46,7 +46,7 @@ export function Layout() {
               </div>
 
             {/* Desktop Nav - Only for EC Admins on Admin Routes */}
-            {user?.user_metadata?.role === 'ec_admin' && isEcRoute && !isPublicBallot && (
+            {user?.user_metadata?.role === 'ec_admin' && isEcRoute && !isPublicBallot && !isAuthRoute && (
               <nav className="hidden md:flex items-center gap-2 p-1 bg-gray-100/50 rounded-2xl border border-gray-200/50">
                 <button
                   onClick={() => navigate('/ec')}
@@ -63,7 +63,7 @@ export function Layout() {
           </div>
 
           {/* User Session - ONLY for EC Admins on Non-Public Routes */}
-          {user?.user_metadata?.role === 'ec_admin' && !isPublicBallot && (
+          {user?.user_metadata?.role === 'ec_admin' && !isPublicBallot && !isAuthRoute && (
             <div className="flex items-center gap-2 md:gap-6">
               <div className="hidden sm:flex flex-col items-end">
                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Admin</p>
@@ -144,7 +144,7 @@ export function Layout() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 pt-10 border-t border-gray-100">
             <div className="flex flex-col items-center md:items-start">
               <p className="text-[10px] font-black text-gray-400 tracking-[0.3em] text-center md:text-left">
-                Developed by <span className="text-primary-600">Axon LaBs</span> • © {new Date().getFullYear()}
+                Developed by <span className="text-primary-600">Axon Tech LaBs</span> • © {new Date().getFullYear()}
               </p>
             </div>
             <div className="flex gap-4 md:gap-8">
@@ -156,7 +156,7 @@ export function Layout() {
       ) : (
         <footer className="py-8 md:py-12 text-center relative z-10">
           <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em]">
-            Developed by <span className="text-primary-600">Axon LaBs</span> • © {new Date().getFullYear()}
+            Developed by <span className="text-primary-600">Axon Tech LaBs</span> • © {new Date().getFullYear()}
           </p>
         </footer>
       )}

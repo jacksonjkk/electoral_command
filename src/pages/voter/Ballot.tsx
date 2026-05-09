@@ -147,50 +147,49 @@ export function Ballot() {
 
   if (showConfirmation) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/40 backdrop-blur-sm overflow-hidden">
-        <Card className="relative w-full max-w-2xl !p-0 overflow-hidden flex flex-col h-[90vh] md:h-[85vh]">
-          <div className="absolute top-0 left-0 w-full h-1 bg-primary-500" />
-          
+      <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-end md:items-center justify-center px-4 py-4 md:py-0">
+        {/* Modal Container - Clean, Professional */}
+        <div className="bg-white rounded-t-3xl md:rounded-3xl w-full md:max-w-2xl max-h-[90vh] md:max-h-[85vh] flex flex-col overflow-hidden shadow-2xl border border-gray-100">
           {/* Header - Fixed */}
-          <div className="flex-shrink-0 px-4 md:px-8 pt-4 md:pt-8 pb-2 md:pb-4">
+          <div className="flex-shrink-0 px-4 md:px-8 pt-6 md:pt-8 pb-3 md:pb-4 border-b border-gray-100">
             <h2 className="text-2xl md:text-3xl font-black text-gray-900 flex items-center gap-2 md:gap-4">
               <ShieldCheck className="w-6 md:w-8 h-6 md:h-8 text-primary-600" />
               <span>Confirm Your Vote</span>
             </h2>
+            <p className="text-[10px] md:text-xs text-gray-500 uppercase tracking-widest mt-2">Review your selections below</p>
           </div>
-
-          {/* Scrollable List - Flexible height */}
-          <div className="flex-1 px-4 md:px-8 overflow-y-auto custom-scrollbar">
-            <div className="space-y-3 md:space-y-4 py-2">
+          
+          {/* Scrollable Content - This is the only scrollable part */}
+          <div className="flex-1 overflow-y-auto">
+            <div className="space-y-3 md:space-y-4 p-4 md:p-8">
               {ballot.map((item) => {
                 const selectedCandidate = item.candidates.find(
                   (c) => c.id === selectedVotes[item.position.id]
                 );
-
                 return (
-                  <div key={item.position.id} className="bg-white/50 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-6 border-2 border-gray-100 flex items-center justify-between gap-3">
+                  <div key={item.position.id} className="bg-gradient-to-r from-gray-50 to-gray-50/50 rounded-xl md:rounded-2xl p-4 md:p-6 border-2 border-gray-100 hover:border-primary-200 transition-colors flex items-center justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                      <p className="text-[8px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5 md:mb-1">{item.position.name}</p>
-                      <h3 className="text-sm md:text-xl font-black text-gray-900 truncate">{selectedCandidate?.name || 'Empty'}</h3>
+                      <p className="text-[8px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 md:mb-2">{item.position.name}</p>
+                      <h3 className="text-sm md:text-xl font-black text-gray-900">{selectedCandidate?.name || 'Not Selected'}</h3>
                     </div>
-                    <div className="w-8 md:w-10 h-8 md:h-10 rounded-lg md:rounded-xl bg-success-500/10 flex flex-shrink-0 items-center justify-center text-success-600 border border-success-500/20">
-                      <CheckCircle2 className="w-5 md:w-6 h-5 md:h-6" />
+                    <div className="flex-shrink-0 w-6 md:w-8 h-6 md:h-8 rounded-full bg-success-500/10 flex items-center justify-center">
+                      <CheckCircle2 className="w-5 md:w-6 h-5 md:h-6 text-success-600" />
                     </div>
                   </div>
                 );
               })}
             </div>
           </div>
-
-          {/* Error Alert - Scrollable part, but visible if present */}
+          
+          {/* Error Alert - Fixed between scroll and buttons */}
           {error && (
-            <div className="flex-shrink-0 px-4 md:px-8 py-2">
+            <div className="flex-shrink-0 px-4 md:px-8 py-3">
               <Alert variant="error" message={error} className="m-0" onClose={() => setError('')} />
             </div>
           )}
 
-          {/* Footer Buttons - Fixed */}
-          <div className="flex-shrink-0 grid grid-cols-2 gap-3 md:gap-4 px-4 md:px-8 py-4 md:py-6 bg-gradient-to-t from-white via-white/95 to-transparent border-t border-gray-100">
+          {/* Footer Buttons - Fixed at bottom, always visible */}
+          <div className="flex-shrink-0 px-4 md:px-8 py-4 md:py-6 bg-white border-t border-gray-100 grid grid-cols-2 gap-3 md:gap-4">
             <Button
               variant="secondary"
               size="lg"
@@ -209,7 +208,7 @@ export function Ballot() {
               Send My Vote
             </Button>
           </div>
-        </Card>
+        </div>
       </div>
     );
   }

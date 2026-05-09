@@ -147,30 +147,30 @@ export function Ballot() {
 
   if (showConfirmation) {
     return (
-      <div className="max-w-3xl mx-auto py-10 px-4">
-        <Card className="relative">
+      <div className="max-w-3xl mx-auto py-4 md:py-10 px-4">
+        <Card className="relative !p-4 md:!p-8">
           <div className="absolute top-0 left-0 w-full h-1 bg-primary-500" />
-          <div className="flex flex-col">
-            <h2 className="text-3xl font-black text-gray-900 mb-6 flex items-center gap-4">
-              <ShieldCheck className="w-8 h-8 text-primary-600" />
-              Check Your Choices
+          <div className="flex flex-col h-full">
+            <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-4 md:mb-6 flex items-center gap-2 md:gap-4">
+              <ShieldCheck className="w-6 md:w-8 h-6 md:h-8 text-primary-600" />
+              <span>Confirm Your Vote</span>
             </h2>
 
             {/* Scrollable list - limit height on small screens */}
-            <div className="space-y-4 mb-6 max-h-[60vh] overflow-auto pr-2 custom-scrollbar">
+            <div className="space-y-3 md:space-y-4 mb-4 md:mb-6 max-h-[50vh] md:max-h-[55vh] overflow-y-auto pr-2 custom-scrollbar">
               {ballot.map((item) => {
                 const selectedCandidate = item.candidates.find(
                   (c) => c.id === selectedVotes[item.position.id]
                 );
 
                 return (
-                  <div key={item.position.id} className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border-2 border-gray-100 flex items-center justify-between">
-                    <div>
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{item.position.name}</p>
-                      <h3 className="text-xl font-black text-gray-900">{selectedCandidate?.name || 'Empty'}</h3>
+                  <div key={item.position.id} className="bg-white/50 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-6 border-2 border-gray-100 flex items-center justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[8px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5 md:mb-1">{item.position.name}</p>
+                      <h3 className="text-sm md:text-xl font-black text-gray-900 truncate">{selectedCandidate?.name || 'Empty'}</h3>
                     </div>
-                    <div className="w-10 h-10 rounded-xl bg-success-500/10 flex items-center justify-center text-success-600 border border-success-500/20">
-                      <CheckCircle2 className="w-6 h-6" />
+                    <div className="w-8 md:w-10 h-8 md:h-10 rounded-lg md:rounded-xl bg-success-500/10 flex flex-shrink-0 items-center justify-center text-success-600 border border-success-500/20">
+                      <CheckCircle2 className="w-5 md:w-6 h-5 md:h-6" />
                     </div>
                   </div>
                 );
@@ -180,11 +180,11 @@ export function Ballot() {
             {error && <Alert variant="error" message={error} className="mb-4" onClose={() => setError('')} />}
 
             {/* Buttons - keep visible by sitting after the scrollable area */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 md:gap-4 mt-auto">
               <Button
                 variant="secondary"
                 size="lg"
-                className="!rounded-2xl border-2 border-gray-100"
+                className="!rounded-xl !rounded-2xl border-2 border-gray-100 !py-3 md:!py-4"
                 onClick={() => setShowConfirmation(false)}
                 disabled={submitting}
               >
@@ -192,7 +192,7 @@ export function Ballot() {
               </Button>
               <Button
                 size="lg"
-                className="!rounded-2xl shadow-neon-primary"
+                className="!rounded-xl md:!rounded-2xl shadow-neon-primary !py-3 md:!py-4"
                 isLoading={submitting}
                 onClick={handleVoteSubmission}
               >

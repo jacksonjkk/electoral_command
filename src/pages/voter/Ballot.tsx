@@ -147,8 +147,8 @@ export function Ballot() {
 
   if (showConfirmation) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-8 bg-black/40 backdrop-blur-sm overflow-y-auto">
-        <Card className="relative w-full max-w-2xl !p-0 overflow-hidden flex flex-col max-h-[90vh] md:max-h-[85vh]">
+      <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/40 backdrop-blur-sm overflow-hidden">
+        <Card className="relative w-full max-w-2xl !p-0 overflow-hidden flex flex-col h-[90vh] md:h-[85vh]">
           <div className="absolute top-0 left-0 w-full h-1 bg-primary-500" />
           
           {/* Header - Fixed */}

@@ -300,9 +300,7 @@ export const PublicBallot: React.FC = () => {
                           candidate.image_url ? "hidden" : ""
                         )}
                       >
-                        <span className="text-6xl font-black text-primary-300 tracking-tighter">
-                          {getInitials(candidate.name)}
-                        </span>
+                        <User className="w-16 h-16 text-primary-300" />
                       </div>
                       {isSelected && (
                         <div className="absolute inset-0 bg-primary-600/40 backdrop-blur-sm flex items-center justify-center">
@@ -393,19 +391,21 @@ export const PublicBallot: React.FC = () => {
       {/* Confirmation Modal */}
       {showConfirmation && (
         <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-md flex items-center justify-center p-4 z-[100]">
-          <Card className="w-full max-w-xl !p-10 relative overflow-hidden border-2 border-white/20">
+          <Card className="w-full max-w-xl !p-6 md:!p-10 relative overflow-hidden border-2 border-white/20 flex flex-col max-h-[90vh]">
             <div className="absolute top-0 left-0 w-full h-1 bg-primary-500" />
-            <h3 className="text-3xl font-black text-gray-900 mb-8 flex items-center gap-4">
-              <ShieldCheck className="w-8 h-8 text-primary-600" />
-              Final Confirmation
-            </h3>
+            
+            <div className="shrink-0">
+              <h3 className="text-2xl md:text-3xl font-black text-gray-900 mb-6 md:mb-8 flex items-center gap-4">
+                <ShieldCheck className="w-6 h-6 md:w-8 md:h-8 text-primary-600" />
+                Final Confirmation
+              </h3>
+              <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-4 md:mb-6">Confirm Your Vote</h2>
+              <p className="text-sm md:text-base text-gray-500 font-medium mb-6 md:mb-8 leading-relaxed">
+                ⚠️ Your choices will be securely saved. No changes are possible after this point.
+              </p>
+            </div>
 
-            <h2 className="text-3xl font-black text-gray-900 mb-6">Confirm Your Vote</h2>
-            <p className="text-gray-500 font-medium mb-10 leading-relaxed">
-              ⚠️ Your choices will be securely saved. No changes are possible after this point.
-            </p>
-
-            <div className="space-y-4 mb-10">
+            <div className="space-y-4 mb-6 md:mb-10 overflow-y-auto custom-scrollbar pr-2 flex-1 min-h-[150px]">
               {ballot.map((item) => (
                 <div key={item.position.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
                   <div>
@@ -414,12 +414,12 @@ export const PublicBallot: React.FC = () => {
                       {item.candidates.find((c) => c.id === selectedVotes[item.position.id])?.name}
                     </p>
                   </div>
-                  <CheckCircle2 className="w-5 h-5 text-success-500" />
+                  <CheckCircle2 className="w-5 h-5 text-success-500 shrink-0 ml-4" />
                 </div>
               ))}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 shrink-0">
               <Button
                 variant="secondary"
                 size="lg"

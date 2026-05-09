@@ -148,53 +148,57 @@ export function Ballot() {
   if (showConfirmation) {
     return (
       <div className="max-w-3xl mx-auto py-10 px-4">
-        <Card className="relative overflow-hidden">
+        <Card className="relative">
           <div className="absolute top-0 left-0 w-full h-1 bg-primary-500" />
-          <h2 className="text-3xl font-black text-gray-900 mb-8 flex items-center gap-4">
-            <ShieldCheck className="w-8 h-8 text-primary-600" />
-            Check Your Choices
-          </h2>
+          <div className="flex flex-col">
+            <h2 className="text-3xl font-black text-gray-900 mb-6 flex items-center gap-4">
+              <ShieldCheck className="w-8 h-8 text-primary-600" />
+              Check Your Choices
+            </h2>
 
-          <div className="space-y-4 mb-10">
-            {ballot.map((item) => {
-              const selectedCandidate = item.candidates.find(
-                (c) => c.id === selectedVotes[item.position.id]
-              );
+            {/* Scrollable list - limit height on small screens */}
+            <div className="space-y-4 mb-6 max-h-[60vh] overflow-auto pr-2 custom-scrollbar">
+              {ballot.map((item) => {
+                const selectedCandidate = item.candidates.find(
+                  (c) => c.id === selectedVotes[item.position.id]
+                );
 
-              return (
-                <div key={item.position.id} className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border-2 border-gray-100 flex items-center justify-between">
-                  <div>
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{item.position.name}</p>
-                    <h3 className="text-xl font-black text-gray-900">{selectedCandidate?.name || 'Empty'}</h3>
+                return (
+                  <div key={item.position.id} className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border-2 border-gray-100 flex items-center justify-between">
+                    <div>
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{item.position.name}</p>
+                      <h3 className="text-xl font-black text-gray-900">{selectedCandidate?.name || 'Empty'}</h3>
+                    </div>
+                    <div className="w-10 h-10 rounded-xl bg-success-500/10 flex items-center justify-center text-success-600 border border-success-500/20">
+                      <CheckCircle2 className="w-6 h-6" />
+                    </div>
                   </div>
-                  <div className="w-10 h-10 rounded-xl bg-success-500/10 flex items-center justify-center text-success-600 border border-success-500/20">
-                    <CheckCircle2 className="w-6 h-6" />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
 
-          {error && <Alert variant="error" message={error} className="mb-6" onClose={() => setError('')} />}
+            {error && <Alert variant="error" message={error} className="mb-4" onClose={() => setError('')} />}
 
-          <div className="grid grid-cols-2 gap-4">
-            <Button
-              variant="secondary"
-              size="lg"
-              className="!rounded-2xl border-2 border-gray-100"
-              onClick={() => setShowConfirmation(false)}
-              disabled={submitting}
-            >
-              Modify
-            </Button>
-            <Button
-              size="lg"
-              className="!rounded-2xl shadow-neon-primary"
-              isLoading={submitting}
-              onClick={handleVoteSubmission}
-            >
-              Submit Vote
-            </Button>
+            {/* Buttons - keep visible by sitting after the scrollable area */}
+            <div className="grid grid-cols-2 gap-4">
+              <Button
+                variant="secondary"
+                size="lg"
+                className="!rounded-2xl border-2 border-gray-100"
+                onClick={() => setShowConfirmation(false)}
+                disabled={submitting}
+              >
+                Go Back
+              </Button>
+              <Button
+                size="lg"
+                className="!rounded-2xl shadow-neon-primary"
+                isLoading={submitting}
+                onClick={handleVoteSubmission}
+              >
+                Send My Vote
+              </Button>
+            </div>
           </div>
         </Card>
       </div>
@@ -202,7 +206,7 @@ export function Ballot() {
   }
 
   return (
-        <div className="max-w-7xl mx-auto pb-40 md:pb-32">
+    <div className="max-w-7xl mx-auto pb-40 md:pb-32">
       {/* Terminal Header */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 md:gap-8 mb-8 md:mb-12 bg-white/40 backdrop-blur-xl p-6 md:p-10 rounded-[32px] md:rounded-[40px] border border-white/20 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/5 rounded-full blur-3xl -mr-32 -mt-32" />

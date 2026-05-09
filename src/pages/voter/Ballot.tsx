@@ -147,17 +147,21 @@ export function Ballot() {
 
   if (showConfirmation) {
     return (
-      <div className="max-w-3xl mx-auto py-4 md:py-10 px-4">
-        <Card className="relative !p-4 md:!p-8">
+      <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-8 bg-black/40 backdrop-blur-sm overflow-y-auto">
+        <Card className="relative w-full max-w-2xl !p-0 overflow-hidden flex flex-col max-h-[90vh] md:max-h-[85vh]">
           <div className="absolute top-0 left-0 w-full h-1 bg-primary-500" />
-          <div className="flex flex-col h-full">
-            <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-4 md:mb-6 flex items-center gap-2 md:gap-4">
+          
+          {/* Header - Fixed */}
+          <div className="flex-shrink-0 px-4 md:px-8 pt-4 md:pt-8 pb-2 md:pb-4">
+            <h2 className="text-2xl md:text-3xl font-black text-gray-900 flex items-center gap-2 md:gap-4">
               <ShieldCheck className="w-6 md:w-8 h-6 md:h-8 text-primary-600" />
               <span>Confirm Your Vote</span>
             </h2>
+          </div>
 
-            {/* Scrollable list - limit height on small screens */}
-            <div className="space-y-3 md:space-y-4 mb-4 md:mb-6 max-h-[50vh] md:max-h-[55vh] overflow-y-auto pr-2 custom-scrollbar">
+          {/* Scrollable List - Flexible height */}
+          <div className="flex-1 px-4 md:px-8 overflow-y-auto custom-scrollbar">
+            <div className="space-y-3 md:space-y-4 py-2">
               {ballot.map((item) => {
                 const selectedCandidate = item.candidates.find(
                   (c) => c.id === selectedVotes[item.position.id]
@@ -176,29 +180,34 @@ export function Ballot() {
                 );
               })}
             </div>
+          </div>
 
-            {error && <Alert variant="error" message={error} className="mb-4" onClose={() => setError('')} />}
-
-            {/* Buttons - keep visible by sitting after the scrollable area */}
-            <div className="grid grid-cols-2 gap-3 md:gap-4 mt-auto">
-              <Button
-                variant="secondary"
-                size="lg"
-                className="!rounded-xl !rounded-2xl border-2 border-gray-100 !py-3 md:!py-4"
-                onClick={() => setShowConfirmation(false)}
-                disabled={submitting}
-              >
-                Go Back
-              </Button>
-              <Button
-                size="lg"
-                className="!rounded-xl md:!rounded-2xl shadow-neon-primary !py-3 md:!py-4"
-                isLoading={submitting}
-                onClick={handleVoteSubmission}
-              >
-                Send My Vote
-              </Button>
+          {/* Error Alert - Scrollable part, but visible if present */}
+          {error && (
+            <div className="flex-shrink-0 px-4 md:px-8 py-2">
+              <Alert variant="error" message={error} className="m-0" onClose={() => setError('')} />
             </div>
+          )}
+
+          {/* Footer Buttons - Fixed */}
+          <div className="flex-shrink-0 grid grid-cols-2 gap-3 md:gap-4 px-4 md:px-8 py-4 md:py-6 bg-gradient-to-t from-white via-white/95 to-transparent border-t border-gray-100">
+            <Button
+              variant="secondary"
+              size="lg"
+              className="!rounded-xl md:!rounded-2xl border-2 border-gray-100 !py-3 md:!py-4"
+              onClick={() => setShowConfirmation(false)}
+              disabled={submitting}
+            >
+              Go Back
+            </Button>
+            <Button
+              size="lg"
+              className="!rounded-xl md:!rounded-2xl shadow-neon-primary !py-3 md:!py-4"
+              isLoading={submitting}
+              onClick={handleVoteSubmission}
+            >
+              Send My Vote
+            </Button>
           </div>
         </Card>
       </div>
